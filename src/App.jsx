@@ -1,33 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { decrement, increment, reset } from './store/counterSlice'
-import Navigation from './components/Navigation'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import MainLayout from "./layouts/MainLayout";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import DriverDashboard from "./pages/driver/DriverDashboard";
 
 function App() {
-  const count=useSelector((state)=>state.counter.value);
-  const dispatch=useDispatch();
-  function handleIncrementClick(){
-    dispatch(increment());
-  }
-  function handleDecrementClick(){
-    dispatch(decrement());
-  }
-  function handleReset(){
-    dispatch(reset());
-  }
-
   return (
-    // <>
-    //   <button onClick={handleIncrementClick}>+</button>
-    //   <p>Count:{count}</p>
-    //   <button onClick={handleDecrementClick}>-</button>
-    //   <button onClick={handleReset}>reset</button>
-    // </>
-    <Navigation/>
-  )
+    <BrowserRouter>
+
+      <Routes>
+
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+        <Route path="/driver/dashboard" element={<DriverDashboard />} />
+
+        <Route path="/" element={<Home />} />
+
+      </Routes>
+
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
