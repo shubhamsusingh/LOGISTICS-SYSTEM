@@ -9,6 +9,7 @@ const Navigation=()=>{
             <Route path="/" element={<MainLayout/>}>
                 <Route index element={<Home/>}></Route>
                 <Route path="/aboute" element={<About/>}/>
+                
             </Route>
         </Routes>
     )
