@@ -4,6 +4,7 @@ import About from "../pages/About"
 import Home from "../pages/Home"
 import { Navigate, Outlet } from "react-router-dom";
 import Login from "../pages/auth/Login";
+import VehicleManagement from "../pages/vechileManagement";
 
 
 const PublicRoute = () => {
@@ -24,6 +25,7 @@ const Navigation=()=>{
             <Route path="/" element={<MainLayout/>}>
                 <Route index element={<Home/>}></Route>
                 <Route path="/aboute" element={<About/>}/>
+                <Route path="/vehicles" element={<VehicleManagement/>}/>
                 
             </Route>
             </Route>
