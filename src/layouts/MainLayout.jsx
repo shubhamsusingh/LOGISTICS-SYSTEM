@@ -19,8 +19,9 @@ export default function MainLayout() {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Header style={{ display: "flex", alignItems: "center", background: "#1a2b4a" }}>
-        
+      <Header
+        style={{ display: "flex", alignItems: "center", background: "#1a2b4a" }}
+      >
         {/* Logo */}
         <div style={{ color: "white", fontWeight: "bold", marginRight: 20 }}>
           Smart Logistics
