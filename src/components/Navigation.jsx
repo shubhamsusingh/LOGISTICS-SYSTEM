@@ -15,7 +15,7 @@ const PublicRoute = () => {
 const PrivateRoute = () => {
   const isAuthenticated = localStorage.getItem("sctoken");
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/auth/login" replace />;
 };
 
 const Navigation=()=>{
@@ -31,7 +31,7 @@ const Navigation=()=>{
             </Route>
             <Route element={<PublicRoute />}>
         {/* <Route path="/auth" element={<AuthLayout />}> */}
-          <Route path="login" element={<Login/>} />
+          <Route path="/auth/login" element={<Login/>} />
         {/* </Route> */}
       </Route>
         </Routes>
