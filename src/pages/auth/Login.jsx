@@ -3,6 +3,7 @@ import { Form, Input, Button, Alert, Divider, Flex, Typography } from "antd";
 import { UserOutlined, LockOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
+import { loginApi } from "../../services/auth";
 
 const { Title } = Typography;
 
@@ -12,24 +13,30 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
 
-  const handleFinish = (values) => {
+  const handleFinish = async(values) => {
     setLoading(true);
     setLoginError("");
-
-    setTimeout(() => {
-      if (values.username === "admin" && values.password === "1234") {
-        
-        // ✅ Store token
-        localStorage.setItem("sctoken", "dummy_token_123");
-
-        // ✅ Redirect to dashboard/home
+      
+    const payload = {
+      email: values.username,
+      password: values.password,
+    };
+    try {
+      const resp=await loginApi(payload);
+      setLoading(false);
+      if(resp&&resp.status===200){
+        console.log(resp);
+        const token=resp.data.token;
+        localStorage.setItem('sctoken', token);
         navigate("/");
-
-      } else {
+      }else{
         setLoginError("Invalid username or password");
       }
+      
+    } catch (error) {
       setLoading(false);
-    }, 1500);
+      setLoginError(error);
+    }
   };
 
   return (
