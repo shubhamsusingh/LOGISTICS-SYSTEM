@@ -19,7 +19,7 @@ const path = [
 
 const MapView = () => {
   return (
-    <LoadScript googleMapsApiKey="AIzaSyCSZ8oy__pN7MPzq3MLIRhMHcxE01q0zmk">
+    <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={12}>
         <Polyline path={path} options={{ strokeColor: "green" }} />
         {path.map((pos, i) => (
