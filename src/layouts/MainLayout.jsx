@@ -1,4 +1,4 @@
-import { Layout, Menu, Avatar } from "antd";
+import { Layout, Menu, Avatar ,Dropdown} from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
@@ -16,7 +16,16 @@ const menuItems = [
 export default function MainLayout() {
   const [selectedMenu, setSelectedMenu] = useState("/");
   const navigate = useNavigate();
-
+const userMenu = [
+    {
+      key: "logout",
+      label: "Logout",
+      onClick: () => {
+        localStorage.removeItem("sctoken"); // remove auth
+        navigate("/auth/login"); // redirect
+      },
+    },
+  ];
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header
@@ -41,7 +50,12 @@ export default function MainLayout() {
         />
 
         {/* User */}
-        <Avatar icon={<UserOutlined />} />
+       <Dropdown menu={{ items: userMenu }} placement="bottomRight">
+          <Avatar
+            icon={<UserOutlined />}
+            style={{ cursor: "pointer", marginLeft: 10 }}
+          />
+        </Dropdown>
       </Header>
 
       {/* Pages Render Here */}
