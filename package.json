@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.20.8",
     "@reduxjs/toolkit": "^2.11.2",
     "antd": "^6.3.3",
     "axios": "^1.13.6",
+    "highcharts": "^12.5.0",
+    "highcharts-react-official": "^3.2.3",
     "jwt-decode": "^4.0.0",
     "path": "^0.12.7",
     "react": "^19.2.0",

@@ -5,6 +5,7 @@ import Home from "../pages/Home"
 import { Navigate, Outlet } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import VehicleManagement from "../pages/vechileManagement";
+import Dashboard from "../pages/Dashboard";
 
 
 const PublicRoute = () => {
@@ -23,7 +24,7 @@ const Navigation=()=>{
         <Routes>
             <Route element={<PrivateRoute />}>
             <Route path="/" element={<MainLayout/>}>
-                <Route index element={<Home/>}></Route>
+                <Route index element={<Dashboard/>}></Route>
                 <Route path="/aboute" element={<About/>}/>
                 <Route path="/vehicles" element={<VehicleManagement/>}/>
                 
