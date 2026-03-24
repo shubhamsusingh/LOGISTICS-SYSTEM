@@ -1,6 +1,6 @@
 // pages/Dashboard.jsx
 import { Row, Col } from "antd";
-import { CarOutlined, EnvironmentOutlined } from "@ant-design/icons";
+import { CarOutlined, EnvironmentOutlined ,FlagFilled,FileFilled } from "@ant-design/icons";
 
 import StatCard from "../components/StatCard";
 import FuelCard from "../components/FuelCard";
@@ -20,10 +20,10 @@ const Dashboard = () => {
           <StatCard icon={<EnvironmentOutlined />} title="Delivery Points" value="68" />
         </Col>
         <Col span={6}>
-          <StatCard title="Active Routes" value="15" />
+          <StatCard icon={<FlagFilled />}title="Active Routes" value="15" />
         </Col>
         <Col span={6}>
-          <StatCard title="Today's Deliveries" value="128 / 142" />
+          <StatCard icon={<FileFilled />} title="Today's Deliveries" value="128 / 142" />
         </Col>
       </Row>
 
