@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Select } from "antd";
 import { error } from "highcharts";
 import { freeDriver } from '../services/driver';
-import { vehicleList } from '../services/vehicle';
+import { vehicleList, addVehicle } from '../services/vehicle';
 const { Option } = Select;
 
 
@@ -49,24 +49,30 @@ const VehicleManagement = () => {
   };
 
   // Handle form submit
-  const handleOk = () => {
-    form.validateFields().then((values) => {
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+
       if (editId) {
-        // Update existing vehicle
-        setVehicles(
-          vehicles.map((v) => (v.id === editId ? { ...v, ...values } : v)),
-        );
+        // (skip update for now or call update API)
       } else {
-        // Add new vehicle
-        const newVehicle = {
-          id: Date.now(),
-          ...values,
-        };
-        setVehicles([...vehicles, newVehicle]);
+        const payload = {
+          "driver_id": values.driver_id,
+          "vehicle_number": values.number,
+          "capacity": values.capacity
+        }
+        console.log(payload);
+        await addVehicle(payload);
+        await vehiclsDetails();
+        await fetchDrivers();
       }
+
       setIsModalOpen(false);
       form.resetFields();
-    });
+
+    } catch (error) {
+      console.error("Error adding vehicle:", error);
+    }
   };
 
   // Delete vehicle
