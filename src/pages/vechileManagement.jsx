@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { Table, Button, Modal, Form, Input } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Button, Modal, Form, Input, Select } from "antd";
+import { error } from "highcharts";
+import { freeDriver } from '../services/driver';
+const { Option } = Select;
+
 
 const VehicleManagement = () => {
   const [vehicles, setVehicles] = useState([
@@ -11,6 +15,20 @@ const VehicleManagement = () => {
   const [form] = Form.useForm();
   const [editId, setEditId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [drivers, setDrivers] = useState([]);
+
+  const fetchDrivers = async () => {
+    try {
+      const resp = await freeDriver();
+      setDrivers(resp.data.data);
+    } catch (error) {
+      console.error("Error fetching drivers:", error);
+
+    }
+  }
+  useEffect(() => {
+    fetchDrivers();
+  }, []);
 
   // Open Modal
   const showModal = (vehicle = null) => {
@@ -48,7 +66,7 @@ const VehicleManagement = () => {
   const handleDelete = (id) => {
     setVehicles(vehicles.filter((v) => v.id !== id));
   };
-
+  
   // Table columns
   const columns = [
     {
@@ -121,11 +139,17 @@ const VehicleManagement = () => {
           </Form.Item>
 
           <Form.Item
-            name="driver"
-            label="Driver Name"
-            rules={[{ required: true, message: "Please enter driver name" }]}
+            name="driver_id"
+            label="Driver"
+            rules={[{ required: true, message: "Please select driver" }]}
           >
-            <Input placeholder="Driver Name" />
+            <Select placeholder="Select Driver">
+              {drivers.map((driver) => (
+                <Option key={driver.id} value={driver.id}>
+                  {driver.user.name}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
