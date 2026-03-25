@@ -2,20 +2,26 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Select } from "antd";
 import { error } from "highcharts";
 import { freeDriver } from '../services/driver';
+import { vehicleList } from '../services/vehicle';
 const { Option } = Select;
 
 
 const VehicleManagement = () => {
-  const [vehicles, setVehicles] = useState([
-    { id: 1, number: "MH01AB1234", capacity: 3000, driver: "Rajesh Kumar" },
-    { id: 2, number: "MH02BC5678", capacity: 2000, driver: "Sunil Patel" },
-    { id: 3, number: "MH03CD9103", capacity: 4000, driver: "Abdul Khan" },
-  ]);
+  const [vehicles, setVehicles] = useState([]);
 
   const [form] = Form.useForm();
   const [editId, setEditId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [drivers, setDrivers] = useState([]);
+
+  const vehiclsDetails = async () => {
+    try {
+      const resp = await vehicleList();
+      setVehicles(resp.data.data);
+    } catch (error) {
+      console.error("Error fetching drivers:", error);
+    }
+  }
 
   const fetchDrivers = async () => {
     try {
@@ -27,6 +33,7 @@ const VehicleManagement = () => {
     }
   }
   useEffect(() => {
+    vehiclsDetails();
     fetchDrivers();
   }, []);
 
@@ -66,12 +73,12 @@ const VehicleManagement = () => {
   const handleDelete = (id) => {
     setVehicles(vehicles.filter((v) => v.id !== id));
   };
-  
+
   // Table columns
   const columns = [
     {
       title: "Vehicle Number",
-      dataIndex: "number",
+      dataIndex: "vehicle_number",
     },
     {
       title: "Capacity (kg)",
@@ -79,7 +86,7 @@ const VehicleManagement = () => {
     },
     {
       title: "Driver Assigned",
-      dataIndex: "driver",
+      render: (_, record) => record?.driver?.user?.name || "N/A",
     },
     {
       title: "Actions",
