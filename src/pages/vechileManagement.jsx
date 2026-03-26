@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Select } from "antd";
-import { error } from "highcharts";
-import { freeDriver } from '../services/driver';
-import { vehicleList, addVehicle } from '../services/vehicle';
+// import { error } from "highcharts";
+import { freeDriver } from "../services/driver";
+import { vehicleList, addVehicle } from "../services/vehicle";
 const { Option } = Select;
-
 
 const VehicleManagement = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -21,7 +20,7 @@ const VehicleManagement = () => {
     } catch (error) {
       console.error("Error fetching drivers:", error);
     }
-  }
+  };
 
   const fetchDrivers = async () => {
     try {
@@ -29,12 +28,15 @@ const VehicleManagement = () => {
       setDrivers(resp.data.data);
     } catch (error) {
       console.error("Error fetching drivers:", error);
-
     }
-  }
+  };
   useEffect(() => {
-    vehiclsDetails();
-    fetchDrivers();
+    const fetchData = async () => {
+      await vehiclsDetails();
+      await fetchDrivers();
+    };
+
+    fetchData();
   }, []);
 
   // Open Modal
@@ -57,10 +59,10 @@ const VehicleManagement = () => {
         // (skip update for now or call update API)
       } else {
         const payload = {
-          "driver_id": values.driver_id,
-          "vehicle_number": values.number,
-          "capacity": values.capacity
-        }
+          driver_id: values.driver_id,
+          vehicle_number: values.number,
+          capacity: values.capacity,
+        };
         console.log(payload);
         await addVehicle(payload);
         await vehiclsDetails();
@@ -69,7 +71,6 @@ const VehicleManagement = () => {
 
       setIsModalOpen(false);
       form.resetFields();
-
     } catch (error) {
       console.error("Error adding vehicle:", error);
     }
