@@ -1,9 +1,8 @@
 // pages/Dashboard.jsx
-import { Row, Col } from "antd";
-import { CarOutlined, EnvironmentOutlined ,FlagFilled,FileFilled } from "@ant-design/icons";
+import { Row, Col,Card } from "antd";
+import { CarOutlined, EnvironmentOutlined ,FlagFilled,FileFilled,ClockCircleOutlined,DashboardOutlined,DollarOutlined ,ApartmentOutlined,InboxOutlined} from "@ant-design/icons";
 
 import StatCard from "../components/StatCard";
-import FuelCard from "../components/FuelCard";
 import DeliveryChart from "../components/DeliveryChart";
 import GaugeChart from "../components/GaugeChart";
 import MapView from "../components/MapView";
@@ -14,26 +13,90 @@ const Dashboard = () => {
       {/* Top Stats */}
       <Row gutter={16}>
         <Col span={6}>
-          <StatCard icon={<CarOutlined />} title="Total Vehicles" value="24" />
+          <StatCard icon={<CarOutlined style={{ fontSize: 50, color: "#1890ff" }} />} title="Total Vehicles" value="24" />
         </Col>
         <Col span={6}>
-          <StatCard icon={<EnvironmentOutlined />} title="Delivery Points" value="68" />
+          <StatCard icon={ <EnvironmentOutlined style={{ fontSize: 50, color: "red" }} />} title="Delivery Points" value="68" />
         </Col>
         <Col span={6}>
-          <StatCard icon={<FlagFilled />}title="Active Routes" value="15" />
+          <StatCard icon={<ApartmentOutlined style={{ fontSize: 50, color: "green" }} />}title="Active Routes" value="15" />
         </Col>
         <Col span={6}>
-          <StatCard icon={<FileFilled />} title="Today's Deliveries" value="128 / 142" />
+          <StatCard icon={<InboxOutlined style={{ fontSize: 50, color: "#faad14" }} />} title="Today's Deliveries" value="128 / 142" />
         </Col>
       </Row>
 
       {/* Middle Section */}
-      <Row gutter={16} style={{ marginTop: 20 }}>
-        <Col span={12}>
-          <FuelCard />
+       <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
+        {/* LEFT SIDE */}
+        <Col xs={24} md={12}>
+          <Card
+            style={{ marginBottom: "20px" }}
+            title={
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <DollarOutlined
+                  style={{ color: "#1890ff", fontSize: "26px" }}
+                />
+                <span>Fuel Cost Estimate</span>
+              </div>
+            }
+          >
+            <h1 style={{ margin: 0 }}>₹ 18,750 / Day</h1>
+            <span style={{ color: "#888" }}>Estimated Daily Fuel Cost</span>
+          </Card>
+
+          <Card title="System Overview" style={{ minHeight: "190px" }}>
+            <Row justify="space-between">
+              <Col
+                span={8}
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <CarOutlined style={{ fontSize: "26px", color: "#1890ff" }} />
+                <div>
+                  <h3 style={{ margin: 0 }}>475 km</h3>
+                  <span style={{ color: "#888" }}>Distance Covered</span>
+                </div>
+              </Col>
+
+              <Col
+                span={8}
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <DashboardOutlined
+                  style={{ fontSize: "26px", color: "#52c41a" }}
+                />
+                <div>
+                  <h3 style={{ margin: 0 }}>82%</h3>
+                  <span style={{ color: "#888" }}>Load Utilization</span>
+                </div>
+              </Col>
+
+              <Col
+                span={8}
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <ClockCircleOutlined
+                  style={{ fontSize: "26px", color: "#1890ff" }}
+                />
+                <div>
+                  <h3 style={{ margin: 0 }}>94%</h3>
+                  <span style={{ color: "#888" }}>On-Time</span>
+                </div>
+              </Col>
+            </Row>
+          </Card>
         </Col>
-        <Col span={12}>
-          <MapView />
+
+        {/* RIGHT SIDE MAP */}
+        <Col xs={24} md={12}>
+          <Card title="User Route Map">
+            <div style={{ height: "280px" }}>
+              {" "}
+              <MapView />
+            </div>
+          </Card>
         </Col>
       </Row>
 
