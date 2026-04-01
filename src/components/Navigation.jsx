@@ -6,6 +6,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import VehicleManagement from "../pages/vechileManagement";
 import Dashboard from "../pages/Dashboard";
+import SmartLogisticsDashboard from "../pages/Driver/SmartLogisticsDashboard";
 
 
 const PublicRoute = () => {
@@ -29,6 +30,7 @@ const Navigation=()=>{
                 <Route path="/vehicles" element={<VehicleManagement/>}/>
                 
             </Route>
+            <Route path="/driver" element={<SmartLogisticsDashboard/>}/>
             </Route>
             <Route element={<PublicRoute />}>
         {/* <Route path="/auth" element={<AuthLayout />}> */}
