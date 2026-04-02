@@ -1,12 +1,13 @@
-import { Route, Routes } from "react-router-dom"
-import MainLayout from "../layouts/MainLayout"
-import About from "../pages/About"
-import Home from "../pages/Home"
+import { Route, Routes } from "react-router-dom";
+import MainLayout from "../layouts/MainLayout";
+import About from "../pages/About";
+import Home from "../pages/Home";
 import { Navigate, Outlet } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import VehicleManagement from "../pages/vechileManagement";
 import Dashboard from "../pages/Dashboard";
-
+import DeliveryPoints from "../pages/deliveryPoints";
+import DeliveryDemand from "../pages/DeliveryDemand";
 
 const PublicRoute = () => {
   const isAuthenticated = localStorage.getItem("sctoken");
@@ -19,23 +20,26 @@ const PrivateRoute = () => {
   return isAuthenticated ? <Outlet /> : <Navigate to="/auth/login" replace />;
 };
 
-const Navigation=()=>{
-    return(
-        <Routes>
-            <Route element={<PrivateRoute />}>
-            <Route path="/" element={<MainLayout/>}>
-                <Route index element={<Dashboard/>}></Route>
-                <Route path="/aboute" element={<About/>}/>
-                <Route path="/vehicles" element={<VehicleManagement/>}/>
-                
-            </Route>
-            </Route>
-            <Route element={<PublicRoute />}>
+const Navigation = () => {
+  return (
+    <Routes>
+      <Route element={<PrivateRoute />}>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Dashboard />} />
+
+          <Route path="/aboute" element={<About />} />
+
+          <Route path="/vehicles" element={<VehicleManagement />} />
+          <Route path="/delivery" element={<DeliveryPoints />} />
+          <Route path="demand" element={<DeliveryDemand />} />
+        </Route>
+      </Route>
+      <Route element={<PublicRoute />}>
         {/* <Route path="/auth" element={<AuthLayout />}> */}
-          <Route path="/auth/login" element={<Login/>} />
+        <Route path="/auth/login" element={<Login />} />
         {/* </Route> */}
       </Route>
-        </Routes>
-    )
+    </Routes>
+  );
 };
 export default Navigation;
