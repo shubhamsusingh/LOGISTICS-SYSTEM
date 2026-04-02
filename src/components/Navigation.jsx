@@ -8,6 +8,7 @@ import VehicleManagement from "../pages/vechileManagement";
 import Dashboard from "../pages/Dashboard";
 import DeliveryPoints from "../pages/deliveryPoints";
 import DeliveryDemand from "../pages/DeliveryDemand";
+import SmartLogisticsDashboard from "../pages/Driver/SmartLogisticsDashboard";
 
 const PublicRoute = () => {
   const isAuthenticated = localStorage.getItem("sctoken");
@@ -33,6 +34,7 @@ const Navigation = () => {
           <Route path="/delivery" element={<DeliveryPoints />} />
           <Route path="demand" element={<DeliveryDemand />} />
         </Route>
+        <Route path="/driver" element={<SmartLogisticsDashboard/>}/>
       </Route>
       <Route element={<PublicRoute />}>
         {/* <Route path="/auth" element={<AuthLayout />}> */}
