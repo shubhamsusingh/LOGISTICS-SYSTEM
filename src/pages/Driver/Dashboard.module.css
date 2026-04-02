@@ -1,0 +1,488 @@
+/* ─── Dashboard.module.css ─────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ── Root ─────────────────────────────────────────────────────────────── */
+.root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #edf1f7;
+  min-height: 100vh;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+.header {
+  background: linear-gradient(135deg, #0f2d52 0%, #1a4a7a 100%);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.headerLogo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.headerLogoIcon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #c8dcf0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4fc3f7, #1565c0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────── */
+.body {
+  padding: 24px 28px;
+  max-width: 1320px;
+  margin: 0 auto;
+  animation: fadeUp 0.45s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.greeting {
+  font-size: 25px;
+  font-weight: 800;
+  color: #0f2d52;
+  margin-bottom: 2px;
+}
+
+.greetingAccent {
+  color: #1565c0;
+}
+
+.greetingSub {
+  font-size: 13px;
+  color: #6b7c93;
+  margin-bottom: 20px;
+}
+
+/* ── Top Grid ─────────────────────────────────────────────────────────── */
+.topGrid {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+/* ── Route Card (dark) ────────────────────────────────────────────────── */
+.routeCard {
+  background: linear-gradient(160deg, #0f2d52 0%, #0a1e37 100%);
+  border-radius: 16px;
+  padding: 20px 18px;
+  box-shadow: 0 6px 24px rgba(15, 45, 82, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.routeCardTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #5dade2;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.routeRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.routeLabel {
+  font-size: 12px;
+  color: #7fa8c8;
+  font-weight: 500;
+}
+
+.routeValue {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e8f4fd;
+}
+
+.routeDate {
+  text-align: center;
+  color: #7fa8c8;
+  font-size: 12px;
+  margin: 12px 0 16px;
+}
+
+.startBtn {
+  width: 100%;
+  margin-bottom: 8px;
+  font-weight: 700 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  letter-spacing: 0.3px;
+}
+
+.outlineBtn {
+  width: 100%;
+  font-weight: 600 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  height: 36px !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  color: #7fb8e8 !important;
+  border-color: rgba(127, 184, 232, 0.35) !important;
+  background: transparent !important;
+}
+
+.outlineBtn:hover {
+  color: #aed6f1 !important;
+  border-color: #aed6f1 !important;
+}
+
+/* Stop list inside route card */
+.stopList {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.stopItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: opacity 0.3s;
+}
+
+.stopItem.done {
+  opacity: 0.42;
+}
+
+.stopBadge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.stopBadgeStart { background: #4fc3f7; }
+.stopBadgeStop  { background: #e53935; }
+
+.stopLabel {
+  font-size: 12px;
+  color: #c5ddf0;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.stopLabel.done {
+  text-decoration: line-through;
+}
+
+/* ── Map Card ─────────────────────────────────────────────────────────── */
+.mapCard {
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  border: none !important;
+}
+
+.mapCardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f2d52;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mapContainer {
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  height: 300px;
+}
+
+.mapMock {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #dce9f6, #c4d8ee);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #5a7fa0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mapMockIcon {
+  font-size: 36px;
+}
+
+.mapMockSub {
+  font-size: 11px;
+  color: #7a9ab8;
+}
+
+/* Route legend */
+.routeLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #4a5568;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Action Bar ───────────────────────────────────────────────────────── */
+.actionBar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  flex: 1;
+  min-width: 130px;
+  height: 42px !important;
+  border-radius: 9px !important;
+  font-weight: 700 !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 13px !important;
+  letter-spacing: 0.2px;
+  border: none !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.13) !important;
+  transition: transform 0.15s, box-shadow 0.15s !important;
+}
+
+.actionBtn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18) !important;
+}
+
+.btnStart   { background: linear-gradient(90deg, #00897b, #00695c) !important; }
+.btnStops   { background: linear-gradient(90deg, #1565c0, #0d47a1) !important; }
+.btnDeliver { background: linear-gradient(90deg, #2e7d32, #1b5e20) !important; }
+.btnIssue   { background: linear-gradient(90deg, #c62828, #b71c1c) !important; }
+
+/* ── Bottom Grid ──────────────────────────────────────────────────────── */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Summary Card ─────────────────────────────────────────────────────── */
+.summaryCard {
+  border-radius: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07) !important;
+  border: none !important;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f2d52;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.progressSection {
+  margin-bottom: 14px;
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #4a5568;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.progressValue {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.networkBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: #e8f5e9;
+  border-radius: 99px;
+  font-size: 11px;
+  color: #2e7d32;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #43a047;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+/* ── Notification Card ────────────────────────────────────────────────── */
+.notifItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #2c3e50;
+  line-height: 1.4;
+}
+
+.notifWarn    { background: #fff8e1; border-left: 3px solid #ffc107; }
+.notifDanger  { background: #fde8e8; border-left: 3px solid #e53935; }
+.notifSuccess { background: #e8f5e9; border-left: 3px solid #43a047; }
+
+.notifIcon {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ── Emergency Card ───────────────────────────────────────────────────── */
+.emergencyCard {
+  border-radius: 16px !important;
+  background: linear-gradient(145deg, #fff8e1, #fffde7) !important;
+  border: 1px solid #ffe082 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07) !important;
+}
+
+.emergencyLabel {
+  font-size: 11px;
+  color: #8d6e00;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.emergencyName {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f2d52;
+  margin-bottom: 12px;
+}
+
+.callBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(90deg, #2e7d32, #43a047);
+  color: #fff !important;
+  border-radius: 9px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 3px 10px rgba(46, 125, 50, 0.3);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.callBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.35);
+  color: #fff !important;
+}
+
+.emergencyMeta {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #795548;
+  line-height: 1.7;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .bottomGrid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .topGrid    { grid-template-columns: 1fr; }
+  .bottomGrid { grid-template-columns: 1fr; }
+  .body       { padding: 16px; }
+  .header     { padding: 0 16px; }
+}
