@@ -1,4 +1,4 @@
-import { Layout, Menu, Avatar ,Dropdown} from "antd";
+import { Layout, Menu, Avatar, Dropdown } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
@@ -9,6 +9,7 @@ const menuItems = [
   { key: "/", label: "Dashboard" },
   { key: "/vehicles", label: "Vehicles" },
   { key: "/delivery", label: "Delivery Points" },
+  { key: "/demand", label: "Delivery Demand" },
   { key: "/route", label: "Route Optimization" },
   { key: "/reports", label: "Reports" },
 ];
@@ -16,7 +17,7 @@ const menuItems = [
 export default function MainLayout() {
   const [selectedMenu, setSelectedMenu] = useState("/");
   const navigate = useNavigate();
-const userMenu = [
+  const userMenu = [
     {
       key: "logout",
       label: "Logout",
@@ -50,7 +51,7 @@ const userMenu = [
         />
 
         {/* User */}
-       <Dropdown menu={{ items: userMenu }} placement="bottomRight">
+        <Dropdown menu={{ items: userMenu }} placement="bottomRight">
           <Avatar
             icon={<UserOutlined />}
             style={{ cursor: "pointer", marginLeft: 10 }}
