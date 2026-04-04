@@ -44,6 +44,7 @@ const VehicleManagement = () => {
     setEditId(vehicle ? vehicle.id : null);
     setIsModalOpen(true);
     if (vehicle) {
+      console.log("--->", vehicle);
       form.setFieldsValue(vehicle);
     } else {
       form.resetFields();
@@ -137,7 +138,7 @@ const VehicleManagement = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="number"
+            name="vehicle_number"
             label="Vehicle Number"
             rules={[{ required: true, message: "Please enter vehicle number" }]}
           >
