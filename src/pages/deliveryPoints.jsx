@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input } from "antd";
+import MapView from "../components/MapView";
 
 const DeliveryPoints = () => {
   // ✅ renamed
@@ -142,7 +143,7 @@ const DeliveryPoints = () => {
 
           <div
             style={{
-              height: 150,
+              height: 200,
               background: "#f0f0f0",
               marginBottom: 16,
               display: "flex",
@@ -150,7 +151,10 @@ const DeliveryPoints = () => {
               justifyContent: "center",
             }}
           >
-            Map Preview
+            <MapView
+              lat={17.385} // your delivery location
+              lng={78.4867}
+            />
           </div>
 
           <Form.Item

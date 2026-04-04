@@ -1,20 +1,25 @@
 // components/MapView.jsx
-import { GoogleMap, LoadScript, Polyline, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Polyline,
+  Marker,
+} from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
-  height: "300px",
+  height: "200px",
 };
 
 const center = {
   lat: 28.6139,
-  lng: 77.2090,
+  lng: 77.209,
 };
 
 const path = [
-  { lat: 28.6139, lng: 77.2090 },
-  { lat: 28.6239, lng: 77.2190 },
-  { lat: 28.6339, lng: 77.2290 },
+  { lat: 28.6139, lng: 77.209 },
+  { lat: 28.6239, lng: 77.219 },
+  { lat: 28.6339, lng: 77.229 },
 ];
 
 const MapView = () => {
