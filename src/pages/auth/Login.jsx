@@ -13,26 +13,33 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
 
-  const handleFinish = async(values) => {
+  const handleFinish = async (values) => {
     setLoading(true);
     setLoginError("");
-      
+
     const payload = {
       email: values.username,
       password: values.password,
     };
     try {
-      const resp=await loginApi(payload);
+      const resp = await loginApi(payload);
       setLoading(false);
-      if(resp&&resp.status===200){
+      if (resp && resp.status === 200) {
         console.log(resp);
-        const token=resp.data.token;
+        const token = resp.data.token;
+        const role = resp.data.user.role;
+        localStorage.setItem("role", role);
         localStorage.setItem('sctoken', token);
-        navigate("/");
-      }else{
+        if (role === 1) {
+          navigate("/");
+        } else if (role === 2) {
+          navigate("/driver");
+        }
+
+      } else {
         setLoginError("Invalid username or password");
       }
-      
+
     } catch (error) {
       setLoading(false);
       setLoginError(error);
