@@ -49,20 +49,42 @@
 }
 
 /* input */
-.input {
+/* Fix Ant Design input wrapper */
+.input.ant-input-affix-wrapper {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
   border-radius: 10px !important;
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: none !important;
   color: white !important;
 }
 
-.input input {
+/* Remove white background inside */
+.input .ant-input {
   background: transparent !important;
   color: white !important;
 }
 
-.input input::placeholder {
-  color: #ddd;
+/* Password input fix */
+.input.ant-input-affix-wrapper .ant-input {
+  background: transparent !important;
+}
+
+/* Remove hover/active white effect */
+.input.ant-input-affix-wrapper:hover,
+.input.ant-input-affix-wrapper:focus,
+.input.ant-input-affix-wrapper-focused {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: none !important;
+}
+
+/* Icons */
+.input .anticon {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Placeholder */
+.input .ant-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* error */
