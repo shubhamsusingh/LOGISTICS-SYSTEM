@@ -11,18 +11,30 @@ const containerStyle = {
   height: "200px",
 };
 
-const center = {
-  lat: 28.6139,
-  lng: 77.209,
-};
+const MapView = ({ data }) => {
+  // 🔹 Vendor (start point)
+  const vendor = data?.vendor;
 
-const path = [
-  { lat: 28.6139, lng: 77.209 },
-  { lat: 28.6239, lng: 77.219 },
-  { lat: 28.6339, lng: 77.229 },
-];
+  const startPoint = vendor
+    ? {
+        lat: parseFloat(vendor.start_latitude),
+        lng: parseFloat(vendor.start_longitude),
+      }
+    : null;
 
-const MapView = () => {
+  // 🔹 Delivery Locations
+  const locations = data?.locationList || [];
+
+  const locationPoints = locations.map((loc) => ({
+    lat: parseFloat(loc.latitude),
+    lng: parseFloat(loc.longitude),
+  }));
+
+  // 🔹 Path (start → all locations)
+  const path = startPoint ? [startPoint, ...locationPoints] : [];
+
+  // 🔹 Center map on vendor (or fallback)
+  const center = startPoint || { lat: 28.6139, lng: 77.209 };
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={12}>
