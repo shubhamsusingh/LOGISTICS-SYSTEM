@@ -3,6 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { UserOutlined } from "@ant-design/icons";
 
+import DriverRegistrationModal from "../components/DriverRegistrationModal";
+
 const { Header, Content } = Layout;
 
 const menuItems = [
@@ -17,7 +19,15 @@ const menuItems = [
 export default function MainLayout() {
   const [selectedMenu, setSelectedMenu] = useState("/");
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const userMenu = [
+    {
+      key: "register",
+      label: "Register",
+      onClick: () => {
+        setIsModalOpen(true);
+      },
+    },
     {
       key: "logout",
       label: "Logout",
@@ -63,6 +73,12 @@ export default function MainLayout() {
       <Content style={{ padding: "20px", background: "#f0f4f8" }}>
         <Outlet />
       </Content>
+
+      <DriverRegistrationModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      
     </Layout>
   );
 }
