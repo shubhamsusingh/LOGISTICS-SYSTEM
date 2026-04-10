@@ -1,6 +1,16 @@
 // pages/Dashboard.jsx
 import { Row, Col, Card } from "antd";
-import { CarOutlined, EnvironmentOutlined, FlagFilled, FileFilled, ClockCircleOutlined, DashboardOutlined, DollarOutlined, ApartmentOutlined, InboxOutlined } from "@ant-design/icons";
+import {
+  CarOutlined,
+  EnvironmentOutlined,
+  FlagFilled,
+  FileFilled,
+  ClockCircleOutlined,
+  DashboardOutlined,
+  DollarOutlined,
+  ApartmentOutlined,
+  InboxOutlined,
+} from "@ant-design/icons";
 
 import StatCard from "../components/StatCard";
 import DeliveryChart from "../components/DeliveryChart";
@@ -20,7 +30,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error fetching DashboardData:", error);
     }
-  }
+  };
   useEffect(() => {
     const getData = async () => {
       await fetchData();
@@ -33,16 +43,36 @@ const Dashboard = () => {
       {/* Top Stats */}
       <Row gutter={16}>
         <Col span={6}>
-          <StatCard icon={<CarOutlined style={{ fontSize: 50, color: "#1890ff" }} />} title="Total Vehicles" value={data.total_vehicles} />
+          <StatCard
+            icon={<CarOutlined style={{ fontSize: 50, color: "#1890ff" }} />}
+            title="Total Vehicles"
+            value={data.total_vehicles}
+          />
         </Col>
         <Col span={6}>
-          <StatCard icon={<EnvironmentOutlined style={{ fontSize: 50, color: "red" }} />} title="Delivery Points" value={data.delivery_points} />
+          <StatCard
+            icon={
+              <EnvironmentOutlined style={{ fontSize: 50, color: "red" }} />
+            }
+            title="Delivery Points"
+            value={data.delivery_points}
+          />
         </Col>
         <Col span={6}>
-          <StatCard icon={<ApartmentOutlined style={{ fontSize: 50, color: "green" }} />} title="Active Routes" value="15" />
+          <StatCard
+            icon={
+              <ApartmentOutlined style={{ fontSize: 50, color: "green" }} />
+            }
+            title="Active Routes"
+            value="15"
+          />
         </Col>
         <Col span={6}>
-          <StatCard icon={<InboxOutlined style={{ fontSize: 50, color: "#faad14" }} />} title="Today's Deliveries" value={`${data?.today_deliveries?.completed || 0} / ${data?.today_deliveries?.total || 0}`} />
+          <StatCard
+            icon={<InboxOutlined style={{ fontSize: 50, color: "#faad14" }} />}
+            title="Today's Deliveries"
+            value={`${data?.today_deliveries?.completed || 0} / ${data?.today_deliveries?.total || 0}`}
+          />
         </Col>
       </Row>
 

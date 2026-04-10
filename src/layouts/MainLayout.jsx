@@ -78,7 +78,6 @@ export default function MainLayout() {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      
     </Layout>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input } from "antd";
+import MapView from "../components/MapView";
 
 const DeliveryPoints = () => {
   // ✅ renamed
@@ -8,6 +9,11 @@ const DeliveryPoints = () => {
   const [editId, setEditId] = useState(null);
   const [form] = Form.useForm();
 
+  const latRaw = Form.useWatch("latitude", form);
+  const lngRaw = Form.useWatch("longitude", form);
+  const lat = parseFloat(latRaw);
+  const lng = parseFloat(lngRaw);
+  const [locationLabel, setLocationLabel] = useState("");
   const fetchLocations = async () => {
     try {
       setLocations([
@@ -27,6 +33,22 @@ const DeliveryPoints = () => {
   useEffect(() => {
     fetchLocations();
   }, []);
+
+  useEffect(() => {
+    if (!isNaN(lat) && !isNaN(lng)) {
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`,
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.results?.[0]) {
+            setLocationLabel(data.results[0].formatted_address);
+          }
+        });
+    } else {
+      setLocationLabel("");
+    }
+  }, [lat, lng]);
 
   const showModal = (record = null) => {
     setEditId(record ? record.id : null);
@@ -116,6 +138,17 @@ const DeliveryPoints = () => {
       </div>
 
       <Table dataSource={locations} columns={columns} rowKey="id" />
+      {/* Map showing all delivery points */}
+      {locations.length > 0 && (
+        <div style={{ marginTop: 24 }}>
+          <h3 style={{ marginBottom: 12 }}>Delivery Points Map</h3>
+          <MapView
+            data={{
+              locationList: locations,
+            }}
+          />
+        </div>
+      )}
 
       <Modal
         title={editId ? "Edit Delivery Point" : "Add Delivery Point"}
@@ -140,18 +173,33 @@ const DeliveryPoints = () => {
             <Input placeholder="Enter address" />
           </Form.Item>
 
-          <div
-            style={{
-              height: 150,
-              background: "#f0f0f0",
-              marginBottom: 16,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            Map Preview
-          </div>
+          {!isNaN(lat) && !isNaN(lng) && (
+            <>
+              <MapView
+                data={{
+                  singlePoint: { lat, lng },
+                }}
+              />
+              {locationLabel && (
+                <div
+                  style={{
+                    marginTop: 6,
+                    padding: "6px 10px",
+                    background: "#f0f9ff",
+                    border: "1px solid #bae0ff",
+                    borderRadius: 6,
+                    fontSize: 13,
+                    color: "#0958d9",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  📍 {locationLabel}
+                </div>
+              )}
+            </>
+          )}
 
           <Form.Item
             name="latitude"
