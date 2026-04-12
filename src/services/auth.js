@@ -7,3 +7,7 @@ export const loginApi = async (payload) => {
 // export const getPermissionsApi = async (id) => {
 //   return axiosInstance.get(`permission/${id}`);
 // };
+
+export const registerApi = async (payload) => {
+  return axiosInstance.post('/register', payload);
+};

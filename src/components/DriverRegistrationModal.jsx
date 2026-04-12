@@ -1,6 +1,8 @@
 import { Modal, Form, Input, message, Button, Select } from "antd";
 import { useState } from "react";
 import axiosInstance from "../utils/AxiosInterceptor";
+import { registerApi } from "../services/auth";
+
 
 const { Option } = Select;
 
@@ -21,7 +23,7 @@ export default function DriverRegistrationModal({ open, onClose }) {
 
       console.log("SENDING DATA:", payload);
 
-      const response = await axiosInstance.post("/register", payload);
+      const response = await registerApi(payload);
 
       console.log("SUCCESS:", response.data);
 
