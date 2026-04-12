@@ -1,27 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Select } from "antd";
-// import { error } from "highcharts";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Select,
+  message,
+  Card,
+} from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+
 import { freeDriver } from "../services/driver";
-import { vehicleList, addVehicle } from "../services/vehicle";
+import {
+  vehicleList,
+  addVehicle,
+  updateVehicle,
+  deleteVehicle,
+} from "../services/vehicle";
+
 const { Option } = Select;
 
 const VehicleManagement = () => {
   const [vehicles, setVehicles] = useState([]);
+  const [drivers, setDrivers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [form] = Form.useForm();
   const [editId, setEditId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [drivers, setDrivers] = useState([]);
 
+  // Fetch vehicles
   const vehiclsDetails = async () => {
     try {
+      setLoading(true);
       const resp = await vehicleList();
       setVehicles(resp.data.data);
     } catch (error) {
-      console.error("Error fetching drivers:", error);
+      console.error("Error fetching vehicles:", error);
+      message.error("Failed to load vehicles");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Fetch drivers
   const fetchDrivers = async () => {
     try {
       const resp = await freeDriver();
@@ -30,59 +53,86 @@ const VehicleManagement = () => {
       console.error("Error fetching drivers:", error);
     }
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      await vehiclsDetails();
-      await fetchDrivers();
-    };
 
-    fetchData();
+  useEffect(() => {
+    vehiclsDetails();
+    fetchDrivers();
   }, []);
 
   // Open Modal
   const showModal = (vehicle = null) => {
     setEditId(vehicle ? vehicle.id : null);
     setIsModalOpen(true);
+
     if (vehicle) {
-      console.log("--->", vehicle);
-      form.setFieldsValue(vehicle);
+      form.setFieldsValue({
+        vehicle_number: vehicle.vehicle_number,
+        capacity: vehicle.capacity,
+        driver_id: vehicle.driver?.id,
+      });
     } else {
       form.resetFields();
     }
   };
 
-  // Handle form submit
+  // Submit
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
 
+      const payload = {
+        driver_id: values.driver_id,
+        vehicle_number: values.vehicle_number,
+        capacity: values.capacity,
+      };
+
+      setLoading(true);
+
       if (editId) {
-        // (skip update for now or call update API)
+        await updateVehicle({ id: editId, ...payload });
+        message.success("Vehicle updated successfully");
       } else {
-        const payload = {
-          driver_id: values.driver_id,
-          vehicle_number: values.number,
-          capacity: values.capacity,
-        };
-        console.log(payload);
         await addVehicle(payload);
-        await vehiclsDetails();
-        await fetchDrivers();
+        message.success("Vehicle added successfully");
       }
+
+      await vehiclsDetails();
+      await fetchDrivers();
 
       setIsModalOpen(false);
       form.resetFields();
     } catch (error) {
-      console.error("Error adding vehicle:", error);
+      console.error("Error:", error);
+      message.error("Operation failed");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Delete vehicle
+  // Delete with confirmation
   const handleDelete = (id) => {
-    setVehicles(vehicles.filter((v) => v.id !== id));
+    Modal.confirm({
+      title: "Delete Vehicle",
+      icon: <ExclamationCircleOutlined />,
+      content: "Are you sure you want to delete this vehicle?",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+
+      onOk: async () => {
+        try {
+          await deleteVehicle(id);
+          message.success("Vehicle deleted successfully");
+          await vehiclsDetails();
+        } catch (error) {
+          console.error("Delete failed:", error);
+          message.error("Delete failed");
+        }
+      },
+    });
   };
 
-  // Table columns
+  // Table Columns
   const columns = [
     {
       title: "Vehicle Number",
@@ -94,7 +144,8 @@ const VehicleManagement = () => {
     },
     {
       title: "Driver Assigned",
-      render: (_, record) => record?.driver?.user?.name || "N/A",
+      render: (_, record) =>
+        record?.driver?.user?.name || "N/A",
     },
     {
       title: "Actions",
@@ -103,7 +154,11 @@ const VehicleManagement = () => {
           <Button type="link" onClick={() => showModal(record)}>
             Edit
           </Button>
-          <Button type="link" danger onClick={() => handleDelete(record.id)}>
+          <Button
+            type="link"
+            danger
+            onClick={() => handleDelete(record.id)}
+          >
             Delete
           </Button>
         </>
@@ -113,59 +168,72 @@ const VehicleManagement = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
+      
+      {/* 🔥 Card UI */}
+      <Card
+        title="🚚 Vehicle Management"
+        extra={
+          <Button type="primary" onClick={() => showModal()}>
+            + Add Vehicle
+          </Button>
+        }
+        style={{ borderRadius: "16px", boxShadow: "0 6px 20px rgba(0,0,0,0.1)" }}
       >
-        <h2>Vehicle Management</h2>
-        <Button type="primary" onClick={() => showModal()}>
-          + Add Vehicle
-        </Button>
-      </div>
+        <Table
+          dataSource={vehicles}
+          columns={columns}
+          rowKey="id"
+          loading={loading}
+        />
+      </Card>
 
-      {/* Table */}
-      <Table dataSource={vehicles} columns={columns} rowKey="id" />
-
-      {/* Modal */}
+      {/* 🔥 Modal */}
       <Modal
         title={editId ? "Edit Vehicle" : "Add Vehicle"}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={() => setIsModalOpen(false)}
+        okText="Confirm"
+        confirmLoading={loading}
+        centered
+        styles={{
+          content: {
+            borderRadius: "20px",
+          },
+        }}
       >
         <Form form={form} layout="vertical">
+          
           <Form.Item
             name="vehicle_number"
             label="Vehicle Number"
-            rules={[{ required: true, message: "Please enter vehicle number" }]}
+            rules={[{ required: true, message: "Enter vehicle number" }]}
           >
-            <Input placeholder="Vehicle Number" />
+            <Input size="large" placeholder="e.g. UK-07-1234" />
           </Form.Item>
 
           <Form.Item
             name="capacity"
             label="Capacity (kg)"
-            rules={[{ required: true, message: "Please enter capacity" }]}
+            rules={[{ required: true, message: "Enter capacity" }]}
           >
-            <Input type="number" placeholder="Capacity (kg)" />
+            <Input type="number" size="large" placeholder="e.g. 500" />
           </Form.Item>
 
           <Form.Item
             name="driver_id"
             label="Driver"
-            rules={[{ required: true, message: "Please select driver" }]}
+            rules={[{ required: true, message: "Select driver" }]}
           >
-            <Select placeholder="Select Driver">
-              {drivers.map((driver) => (
+            <Select size="large" placeholder="Select Driver">
+              {drivers.map((driver, index) => (
                 <Option key={driver.id} value={driver.id}>
-                  {driver.user.name}
+                  {`Driver ${index + 1}`}
                 </Option>
               ))}
             </Select>
           </Form.Item>
+
         </Form>
       </Modal>
     </div>

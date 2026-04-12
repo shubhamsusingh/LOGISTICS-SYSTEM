@@ -1,169 +1,139 @@
-// pages/Dashboard.jsx
-import { Row, Col, Card } from "antd";
-import {
-  CarOutlined,
-  EnvironmentOutlined,
-  FlagFilled,
-  FileFilled,
-  ClockCircleOutlined,
-  DashboardOutlined,
-  DollarOutlined,
-  ApartmentOutlined,
-  InboxOutlined,
-} from "@ant-design/icons";
+<div
+  style={{
+    padding: "24px",
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #f8fafc, #eef2ff)",
+  }}
+>
+  {/* TOP STATS */}
+  <Row gutter={[20, 20]}>
+    {/* keep your stat cards same */}
+  </Row>
 
-import StatCard from "../components/StatCard";
-import DeliveryChart from "../components/DeliveryChart";
-import GaugeChart from "../components/GaugeChart";
-import MapView from "../components/MapView";
-import { getDashboard } from "../services/Dashboard";
-import { useEffect, useState } from "react";
-import { use } from "react";
+  {/* MIDDLE */}
+  <Row gutter={[20, 20]} style={{ marginTop: 20 }}>
+    
+    {/* LEFT */}
+    <Col xs={24} md={12}>
+      {/* 🔥 UPDATED FUEL CARD */}
+      <Card
+        hoverable
+        style={{
+          borderRadius: "20px",
+          background: "linear-gradient(135deg, #0ea5e9, #38bdf8)", // ✅ NEW COLOR
+          color: "white",
+          boxShadow: "0 15px 35px rgba(14,165,233,0.3)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <DollarOutlined style={{ fontSize: 26 }} />
+          <h3>Fuel Cost Estimate</h3>
+        </div>
 
-const Dashboard = () => {
-  const [data, setData] = useState([]);
-  const fetchData = async () => {
-    try {
-      const resp = await getDashboard();
-      setData(resp.data.data);
-      console.log(resp);
-    } catch (error) {
-      console.error("Error fetching DashboardData:", error);
-    }
-  };
-  useEffect(() => {
-    const getData = async () => {
-      await fetchData();
-    };
+        <h1 style={{ marginTop: 10 }}>₹ 18,750 / Day</h1>
+        <p style={{ opacity: 0.85 }}>Estimated Daily Fuel Cost</p>
+      </Card>
 
-    getData();
-  }, []);
-  return (
-    <div style={{ padding: 20 }}>
-      {/* Top Stats */}
-      <Row gutter={16}>
-        <Col span={6}>
-          <StatCard
-            icon={<CarOutlined style={{ fontSize: 50, color: "#1890ff" }} />}
-            title="Total Vehicles"
-            value={data.total_vehicles}
-          />
-        </Col>
-        <Col span={6}>
-          <StatCard
-            icon={
-              <EnvironmentOutlined style={{ fontSize: 50, color: "red" }} />
-            }
-            title="Delivery Points"
-            value={data.delivery_points}
-          />
-        </Col>
-        <Col span={6}>
-          <StatCard
-            icon={
-              <ApartmentOutlined style={{ fontSize: 50, color: "green" }} />
-            }
-            title="Active Routes"
-            value="15"
-          />
-        </Col>
-        <Col span={6}>
-          <StatCard
-            icon={<InboxOutlined style={{ fontSize: 50, color: "#faad14" }} />}
-            title="Today's Deliveries"
-            value={`${data?.today_deliveries?.completed || 0} / ${data?.today_deliveries?.total || 0}`}
-          />
-        </Col>
-      </Row>
+      {/* SYSTEM OVERVIEW */}
+      <Card
+        hoverable
+        style={{
+          borderRadius: "20px",
+          marginTop: 16,
+          background: "rgba(255,255,255,0.9)",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+        }}
+      >
+        <h3>System Overview</h3>
 
-      {/* Middle Section */}
-      <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
-        {/* LEFT SIDE */}
-        <Col xs={24} md={12}>
-          <Card
-            style={{ marginBottom: "20px" }}
-            title={
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "8px" }}
-              >
-                <DollarOutlined
-                  style={{ color: "#1890ff", fontSize: "26px" }}
-                />
-                <span>Fuel Cost Estimate</span>
-              </div>
-            }
-          >
-            <h1 style={{ margin: 0 }}>₹ 18,750 / Day</h1>
-            <span style={{ color: "#888" }}>Estimated Daily Fuel Cost</span>
-          </Card>
+        <Row justify="space-between" style={{ marginTop: 20 }}>
+          <Col span={8} style={{ textAlign: "center" }}>
+            <CarOutlined style={{ fontSize: 26, color: "#6366f1" }} />
+            <h3>475 km</h3>
+            <span style={{ color: "#6b7280" }}>Distance</span>
+          </Col>
 
-          <Card title="System Overview" style={{ minHeight: "190px" }}>
-            <Row justify="space-between">
-              <Col
-                span={8}
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <CarOutlined style={{ fontSize: "26px", color: "#1890ff" }} />
-                <div>
-                  <h3 style={{ margin: 0 }}>475 km</h3>
-                  <span style={{ color: "#888" }}>Distance Covered</span>
-                </div>
-              </Col>
+          <Col span={8} style={{ textAlign: "center" }}>
+            <DashboardOutlined style={{ fontSize: 26, color: "#10b981" }} />
+            <h3>82%</h3>
+            <span style={{ color: "#6b7280" }}>Utilization</span>
+          </Col>
 
-              <Col
-                span={8}
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <DashboardOutlined
-                  style={{ fontSize: "26px", color: "#52c41a" }}
-                />
-                <div>
-                  <h3 style={{ margin: 0 }}>82%</h3>
-                  <span style={{ color: "#888" }}>Load Utilization</span>
-                </div>
-              </Col>
+          <Col span={8} style={{ textAlign: "center" }}>
+            <ClockCircleOutlined style={{ fontSize: 26, color: "#3b82f6" }} />
+            <h3>94%</h3>
+            <span style={{ color: "#6b7280" }}>On-Time</span>
+          </Col>
+        </Row>
+      </Card>
+    </Col>
 
-              <Col
-                span={8}
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <ClockCircleOutlined
-                  style={{ fontSize: "26px", color: "#1890ff" }}
-                />
-                <div>
-                  <h3 style={{ margin: 0 }}>94%</h3>
-                  <span style={{ color: "#888" }}>On-Time</span>
-                </div>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
+    {/* 🔥 RIGHT MAP (FIXED SIZE) */}
+    <Col xs={24} md={12}>
+      <Card
+        title="📍 Live Route Map"
+        hoverable
+        style={{
+          borderRadius: "20px",
+          background: "rgba(255,255,255,0.95)",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+          height: "100%",
+        }}
+        bodyStyle={{ padding: 0 }}
+      >
+        <div
+          style={{
+            height: "100%",
+            minHeight: "360px",
+            width: "100%",
+          }}
+        >
+          <MapView data={data} />
+        </div>
+      </Card>
+    </Col>
+  </Row>
 
-        {/* RIGHT SIDE MAP */}
-        <Col xs={24} md={12}>
-          <Card title="User Route Map">
-            <div style={{ height: "280px" }}>
-              {" "}
-              <MapView data={data} />
-            </div>
-          </Card>
-        </Col>
-      </Row>
+  {/* BOTTOM */}
+  <Row gutter={[20, 20]} style={{ marginTop: 20 }}>
+    <Col xs={24} md={12}>
+      <Card
+        title="📊 Delivery Trends"
+        hoverable
+        style={{
+          borderRadius: "20px",
+          background: "rgba(255,255,255,0.9)",
+          boxShadow: "0 10px 25px rgba(0,0,0,0.08)",
+        }}
+      >
+        <DeliveryChart />
+      </Card>
+    </Col>
 
-      {/* Bottom Section */}
-      <Row gutter={16} style={{ marginTop: 20 }}>
-        <Col span={12}>
-          <DeliveryChart />
-        </Col>
-        <Col span={6}>
-          <GaugeChart title="Fuel Usage" value={70} />
-        </Col>
-        <Col span={6}>
-          <GaugeChart title="Cost Savings" value={22} />
-        </Col>
-      </Row>
-    </div>
-  );
-};
+    <Col xs={24} md={6}>
+      <Card
+        hoverable
+        style={{
+          borderRadius: "20px",
+          textAlign: "center",
+          background: "rgba(255,255,255,0.9)",
+        }}
+      >
+        <GaugeChart title="Fuel Usage" value={70} />
+      </Card>
+    </Col>
 
-export default Dashboard;
+    <Col xs={24} md={6}>
+      <Card
+        hoverable
+        style={{
+          borderRadius: "20px",
+          textAlign: "center",
+          background: "rgba(255,255,255,0.9)",
+        }}
+      >
+        <GaugeChart title="Cost Savings" value={22} />
+      </Card>
+    </Col>
+  </Row>
+</div>

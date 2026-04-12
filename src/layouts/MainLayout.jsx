@@ -43,29 +43,47 @@ export default function MainLayout() {
         style={{ display: "flex", alignItems: "center", background: "#1a2b4a" }}
       >
         {/* Logo */}
-        <div style={{ color: "white", fontWeight: "bold", marginRight: 20 }}>
-          Smart Logistics
-        </div>
+        <div
+  style={{
+    color: "white",
+    fontWeight: "700",
+    fontSize: "18px",
+    marginRight: 20,
+    letterSpacing: "0.5px",
+  }}
+>
+  🚚 Smart Logistics
+</div>
 
         {/* Menu */}
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          selectedKeys={[selectedMenu]}
-          onClick={({ key }) => {
-            setSelectedMenu(key);
-            navigate(key);
-          }}
-          items={menuItems}
-          style={{ flex: 1 }}
-        />
+       <Menu
+  theme="dark"
+  mode="horizontal"
+  selectedKeys={[selectedMenu]}
+  onClick={({ key }) => {
+    setSelectedMenu(key);
+    navigate(key);
+  }}
+  items={menuItems}
+  style={{
+    flex: 1,
+    background: "transparent",
+    borderBottom: "none",
+    fontWeight: "500",
+  }}
+/>
 
         {/* User */}
         <Dropdown menu={{ items: userMenu }} placement="bottomRight">
-          <Avatar
-            icon={<UserOutlined />}
-            style={{ cursor: "pointer", marginLeft: 10 }}
-          />
+         <Avatar
+  icon={<UserOutlined />}
+  style={{
+    cursor: "pointer",
+    marginLeft: 10,
+    background: "#ffffff20",
+    backdropFilter: "blur(5px)",
+  }}
+/>
         </Dropdown>
       </Header>
 
