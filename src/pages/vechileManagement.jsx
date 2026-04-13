@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Table,
-  Button,
-  Modal,
-  Form,
-  Input,
-  Select,
-  message,
-  Card,
-} from "antd";
+import { Table, Button, Modal, Form, Input, Select, message, Card } from "antd";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { freeDriver } from "../services/driver";
@@ -37,7 +28,6 @@ const VehicleManagement = () => {
       const resp = await vehicleList();
       setVehicles(resp.data.data);
     } catch (error) {
-      console.error("Error fetching vehicles:", error);
       message.error("Failed to load vehicles");
     } finally {
       setLoading(false);
@@ -50,7 +40,7 @@ const VehicleManagement = () => {
       const resp = await freeDriver();
       setDrivers(resp.data.data);
     } catch (error) {
-      console.error("Error fetching drivers:", error);
+      console.error(error);
     }
   };
 
@@ -59,29 +49,32 @@ const VehicleManagement = () => {
     fetchDrivers();
   }, []);
 
-  // Open Modal
+  // ✅ OPEN MODAL (FIXED)
   const showModal = (vehicle = null) => {
-    setEditId(vehicle ? vehicle.id : null);
     setIsModalOpen(true);
 
     if (vehicle) {
+      setEditId(vehicle.id);
+
       form.setFieldsValue({
         vehicle_number: vehicle.vehicle_number,
         capacity: vehicle.capacity,
-        driver_id: vehicle.driver?.id,
+        driver_name: vehicle.driver?.user?.name, // ✅ for UI
+        driver_id: vehicle.driver?.id,           // ✅ for API
       });
     } else {
+      setEditId(null);
       form.resetFields();
     }
   };
 
-  // Submit
+  // ✅ SUBMIT
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
 
       const payload = {
-        driver_id: values.driver_id,
+        driver_id: values.driver_id, // ✅ direct id
         vehicle_number: values.vehicle_number,
         capacity: values.capacity,
       };
@@ -97,19 +90,16 @@ const VehicleManagement = () => {
       }
 
       await vehiclsDetails();
-      await fetchDrivers();
-
       setIsModalOpen(false);
       form.resetFields();
     } catch (error) {
-      console.error("Error:", error);
       message.error("Operation failed");
     } finally {
       setLoading(false);
     }
   };
 
-  // Delete with confirmation
+  // ✅ DELETE
   const handleDelete = (id) => {
     Modal.confirm({
       title: "Delete Vehicle",
@@ -122,30 +112,28 @@ const VehicleManagement = () => {
       onOk: async () => {
         try {
           await deleteVehicle(id);
-          message.success("Vehicle deleted successfully");
+          message.success("Vehicle deleted");
           await vehiclsDetails();
-        } catch (error) {
-          console.error("Delete failed:", error);
+        } catch {
           message.error("Delete failed");
         }
       },
     });
   };
 
-  // Table Columns
+  // TABLE
   const columns = [
     {
       title: "Vehicle Number",
       dataIndex: "vehicle_number",
     },
     {
-      title: "Capacity (kg)",
+      title: "Capacity",
       dataIndex: "capacity",
     },
     {
-      title: "Driver Assigned",
-      render: (_, record) =>
-        record?.driver?.user?.name || "N/A",
+      title: "Driver",
+      render: (_, record) => record?.driver?.user?.name || "N/A",
     },
     {
       title: "Actions",
@@ -154,11 +142,7 @@ const VehicleManagement = () => {
           <Button type="link" onClick={() => showModal(record)}>
             Edit
           </Button>
-          <Button
-            type="link"
-            danger
-            onClick={() => handleDelete(record.id)}
-          >
+          <Button type="link" danger onClick={() => handleDelete(record.id)}>
             Delete
           </Button>
         </>
@@ -168,8 +152,6 @@ const VehicleManagement = () => {
 
   return (
     <div style={{ padding: 24 }}>
-      
-      {/* 🔥 Card UI */}
       <Card
         title="🚚 Vehicle Management"
         extra={
@@ -177,7 +159,10 @@ const VehicleManagement = () => {
             + Add Vehicle
           </Button>
         }
-        style={{ borderRadius: "16px", boxShadow: "0 6px 20px rgba(0,0,0,0.1)" }}
+        style={{
+          borderRadius: "16px",
+          boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+        }}
       >
         <Table
           dataSource={vehicles}
@@ -187,7 +172,6 @@ const VehicleManagement = () => {
         />
       </Card>
 
-      {/* 🔥 Modal */}
       <Modal
         title={editId ? "Edit Vehicle" : "Add Vehicle"}
         open={isModalOpen}
@@ -196,43 +180,48 @@ const VehicleManagement = () => {
         okText="Confirm"
         confirmLoading={loading}
         centered
-        styles={{
-          content: {
-            borderRadius: "20px",
-          },
-        }}
       >
         <Form form={form} layout="vertical">
-          
+
           <Form.Item
             name="vehicle_number"
             label="Vehicle Number"
-            rules={[{ required: true, message: "Enter vehicle number" }]}
+            rules={[{ required: true }]}
           >
-            <Input size="large" placeholder="e.g. UK-07-1234" />
+            <Input size="large" />
           </Form.Item>
 
           <Form.Item
             name="capacity"
-            label="Capacity (kg)"
-            rules={[{ required: true, message: "Enter capacity" }]}
+            label="Capacity"
+            rules={[{ required: true }]}
           >
-            <Input type="number" size="large" placeholder="e.g. 500" />
+            <Input type="number" size="large" />
           </Form.Item>
 
-          <Form.Item
-            name="driver_id"
-            label="Driver"
-            rules={[{ required: true, message: "Select driver" }]}
-          >
-            <Select size="large" placeholder="Select Driver">
-              {drivers.map((driver, index) => (
-                <Option key={driver.id} value={driver.id}>
-                  {`Driver ${index + 1}`}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+          {/* ✅ DRIVER FIELD FINAL FIX */}
+          {editId ? (
+            <Form.Item label="Driver">
+              <Input
+                disabled
+                value={form.getFieldValue("driver_name") || ""}
+              />
+            </Form.Item>
+          ) : (
+            <Form.Item
+              name="driver_id"
+              label="Driver"
+              rules={[{ required: true }]}
+            >
+              <Select placeholder="Select Driver">
+                {drivers.map((driver) => (
+                  <Option key={driver.id} value={driver.id}>
+                    {driver.user.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
 
         </Form>
       </Modal>
