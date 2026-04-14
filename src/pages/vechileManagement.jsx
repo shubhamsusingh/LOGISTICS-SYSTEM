@@ -59,8 +59,11 @@ const VehicleManagement = () => {
       form.setFieldsValue({
         vehicle_number: vehicle.vehicle_number,
         capacity: vehicle.capacity,
-        driver_name: vehicle.driver?.user?.name, // ✅ for UI
-        driver_id: vehicle.driver?.id,           // ✅ for API
+
+        driver_id: {
+          value: vehicle.driver?.id,
+          label: vehicle.driver?.user?.name,
+        }, // ✅ for API
       });
     } else {
       setEditId(null);
@@ -182,7 +185,6 @@ const VehicleManagement = () => {
         centered
       >
         <Form form={form} layout="vertical">
-
           <Form.Item
             name="vehicle_number"
             label="Vehicle Number"
@@ -200,29 +202,22 @@ const VehicleManagement = () => {
           </Form.Item>
 
           {/* ✅ DRIVER FIELD FINAL FIX */}
-          {editId ? (
-            <Form.Item label="Driver">
-              <Input
-                disabled
-                value={form.getFieldValue("driver_name") || ""}
-              />
-            </Form.Item>
-          ) : (
-            <Form.Item
-              name="driver_id"
-              label="Driver"
-              rules={[{ required: true }]}
+          <Form.Item
+            name="driver_id"
+            label="Driver"
+            rules={[{ required: true }]}
+          >
+            <Select
+              placeholder="Select Driver"
+              labelInValue // ✅ IMPORTANT
             >
-              <Select placeholder="Select Driver">
-                {drivers.map((driver) => (
-                  <Option key={driver.id} value={driver.id}>
-                    {driver.user.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          )}
-
+              {drivers.map((driver) => (
+                <Option key={driver.id} value={driver.id}>
+                  {driver.user.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
         </Form>
       </Modal>
     </div>
