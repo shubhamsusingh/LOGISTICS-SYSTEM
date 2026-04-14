@@ -73,34 +73,39 @@ const VehicleManagement = () => {
 
   // ✅ SUBMIT
   const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
+  try {
+    const values = await form.validateFields();
 
-      const payload = {
-        driver_id: values.driver_id, // ✅ direct id
-        vehicle_number: values.vehicle_number,
-        capacity: values.capacity,
-      };
+    const payload = {
+      driver_id: values.driver_id.value, // ✅ extract ID
+      vehicle_number: values.vehicle_number,
+      capacity: values.capacity,
+    };
 
-      setLoading(true);
+    setLoading(true);
 
-      if (editId) {
-        await updateVehicle({ id: editId, ...payload });
-        message.success("Vehicle updated successfully");
-      } else {
-        await addVehicle(payload);
-        message.success("Vehicle added successfully");
-      }
-
-      await vehiclsDetails();
-      setIsModalOpen(false);
-      form.resetFields();
-    } catch (error) {
-      message.error("Operation failed");
-    } finally {
-      setLoading(false);
+    if (editId) {
+      // ✅ UPDATE (include id)
+      await updateVehicle({
+        id: editId,
+        ...payload,
+      });
+      message.success("Vehicle updated successfully");
+    } else {
+      // ✅ ADD (no id)
+      await addVehicle(payload);
+      message.success("Vehicle added successfully");
     }
-  };
+
+    await vehiclsDetails();
+    setIsModalOpen(false);
+    form.resetFields();
+  } catch (error) {
+    message.error("Operation failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // ✅ DELETE
   const handleDelete = (id) => {
