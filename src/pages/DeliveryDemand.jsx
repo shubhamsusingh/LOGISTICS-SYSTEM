@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Select, DatePicker } from "antd";
-
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Card,
+} from "antd";
+import DemandPieChart from "../components/DemandPieChart";
 const { Option } = Select;
 
 const DeliveryDemand = () => {
@@ -161,6 +170,9 @@ const DeliveryDemand = () => {
           </Form.Item>
         </Form>
       </Modal>
+      <Card title="Demand Summary" style={{ marginTop: 24 }}>
+        <DemandPieChart />
+      </Card>
     </div>
   );
 };
