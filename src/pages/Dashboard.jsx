@@ -1,5 +1,7 @@
 // pages/Dashboard.jsx
+
 import { Row, Col, Card } from "antd";
+
 import {
   CarOutlined,
   EnvironmentOutlined,
@@ -13,24 +15,34 @@ import {
 } from "@ant-design/icons";
 
 import StatCard from "../components/StatCard";
+
 import DeliveryChart from "../components/DeliveryChart";
+
 import GaugeChart from "../components/GaugeChart";
+
 import MapView from "../components/MapView";
+
 import { getDashboard } from "../services/Dashboard";
+
 import { useEffect, useState } from "react";
+
 import { use } from "react";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
+
   const fetchData = async () => {
     try {
       const resp = await getDashboard();
+
       setData(resp.data.data);
+
       console.log(resp);
     } catch (error) {
       console.error("Error fetching DashboardData:", error);
     }
   };
+
   useEffect(() => {
     const getData = async () => {
       await fetchData();
@@ -38,9 +50,11 @@ const Dashboard = () => {
 
     getData();
   }, []);
+
   return (
     <div style={{ padding: 20 }}>
       {/* Top Stats */}
+
       <Row gutter={16}>
         <Col span={6}>
           <StatCard
@@ -49,6 +63,7 @@ const Dashboard = () => {
             value={data.total_vehicles}
           />
         </Col>
+
         <Col span={6}>
           <StatCard
             icon={
@@ -58,6 +73,7 @@ const Dashboard = () => {
             value={data.delivery_points}
           />
         </Col>
+
         <Col span={6}>
           <StatCard
             icon={
@@ -67,6 +83,7 @@ const Dashboard = () => {
             value="15"
           />
         </Col>
+
         <Col span={6}>
           <StatCard
             icon={<InboxOutlined style={{ fontSize: 50, color: "#faad14" }} />}
@@ -77,8 +94,10 @@ const Dashboard = () => {
       </Row>
 
       {/* Middle Section */}
+
       <Row gutter={[16, 16]} style={{ marginTop: "20px" }}>
         {/* LEFT SIDE */}
+
         <Col xs={24} md={12}>
           <Card
             style={{ marginBottom: "20px" }}
@@ -89,11 +108,13 @@ const Dashboard = () => {
                 <DollarOutlined
                   style={{ color: "#1890ff", fontSize: "26px" }}
                 />
+
                 <span>Fuel Cost Estimate</span>
               </div>
             }
           >
             <h1 style={{ margin: 0 }}>₹ 18,750 / Day</h1>
+
             <span style={{ color: "#888" }}>Estimated Daily Fuel Cost</span>
           </Card>
 
@@ -104,8 +125,10 @@ const Dashboard = () => {
                 style={{ display: "flex", alignItems: "center", gap: "10px" }}
               >
                 <CarOutlined style={{ fontSize: "26px", color: "#1890ff" }} />
+
                 <div>
                   <h3 style={{ margin: 0 }}>475 km</h3>
+
                   <span style={{ color: "#888" }}>Distance Covered</span>
                 </div>
               </Col>
@@ -117,8 +140,10 @@ const Dashboard = () => {
                 <DashboardOutlined
                   style={{ fontSize: "26px", color: "#52c41a" }}
                 />
+
                 <div>
                   <h3 style={{ margin: 0 }}>82%</h3>
+
                   <span style={{ color: "#888" }}>Load Utilization</span>
                 </div>
               </Col>
@@ -130,8 +155,10 @@ const Dashboard = () => {
                 <ClockCircleOutlined
                   style={{ fontSize: "26px", color: "#1890ff" }}
                 />
+
                 <div>
                   <h3 style={{ margin: 0 }}>94%</h3>
+
                   <span style={{ color: "#888" }}>On-Time</span>
                 </div>
               </Col>
@@ -140,6 +167,7 @@ const Dashboard = () => {
         </Col>
 
         {/* RIGHT SIDE MAP */}
+
         <Col xs={24} md={12}>
           <Card title="User Route Map">
             <div style={{ height: "280px" }}>
@@ -151,13 +179,16 @@ const Dashboard = () => {
       </Row>
 
       {/* Bottom Section */}
+
       <Row gutter={16} style={{ marginTop: 20 }}>
         <Col span={12}>
           <DeliveryChart />
         </Col>
+
         <Col span={6}>
           <GaugeChart title="Fuel Usage" value={70} />
         </Col>
+
         <Col span={6}>
           <GaugeChart title="Cost Savings" value={22} />
         </Col>

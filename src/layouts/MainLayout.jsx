@@ -43,8 +43,16 @@ export default function MainLayout() {
         style={{ display: "flex", alignItems: "center", background: "#1a2b4a" }}
       >
         {/* Logo */}
-        <div style={{ color: "white", fontWeight: "bold", marginRight: 20 }}>
-          Smart Logistics
+        <div
+          style={{
+            color: "white",
+            fontWeight: "700",
+            fontSize: "18px",
+            marginRight: 20,
+            letterSpacing: "0.5px",
+          }}
+        >
+          🚚 Smart Logistics
         </div>
 
         {/* Menu */}
@@ -57,14 +65,24 @@ export default function MainLayout() {
             navigate(key);
           }}
           items={menuItems}
-          style={{ flex: 1 }}
+          style={{
+            flex: 1,
+            background: "transparent",
+            borderBottom: "none",
+            fontWeight: "500",
+          }}
         />
 
         {/* User */}
         <Dropdown menu={{ items: userMenu }} placement="bottomRight">
           <Avatar
             icon={<UserOutlined />}
-            style={{ cursor: "pointer", marginLeft: 10 }}
+            style={{
+              cursor: "pointer",
+              marginLeft: 10,
+              background: "#ffffff20",
+              backdropFilter: "blur(5px)",
+            }}
           />
         </Dropdown>
       </Header>

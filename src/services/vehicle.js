@@ -5,3 +5,12 @@ export const vehicleList=async()=>{
 export const addVehicle=async(payload)=>{
     return axiosInstance.post('/addVehicle',payload);
 }
+
+
+export const updateVehicle = (data) => {
+  return axiosInstance.post("/updateVehicle", data);
+};
+
+export const deleteVehicle = (id) => {
+  return axiosInstance.delete(`/vehicle/${id}`);
+};
