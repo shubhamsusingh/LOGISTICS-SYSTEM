@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input } from "antd";
+import { Table, Button, Modal, Form, Input, Select } from "antd";
 import MapView from "../components/MapView";
 
 const DeliveryPoints = () => {
@@ -14,12 +14,18 @@ const DeliveryPoints = () => {
   const lat = parseFloat(latRaw);
   const lng = parseFloat(lngRaw);
   const [locationLabel, setLocationLabel] = useState("");
+  const [vendors, setVendors] = useState([
+    { id: 1, name: "ABC Supplier" },
+    { id: 2, name: "XYZ Logistics" },
+    { id: 3, name: "Fresh Foods Ltd" },
+  ]);
   const fetchLocations = async () => {
     try {
       setLocations([
         {
           id: 1,
           name: "Anganwadi Center A",
+          vendorName: "ABC Supplier",
           address: "123 Main Street",
           latitude: "18.5204",
           longitude: "73.8567",
@@ -70,6 +76,7 @@ const DeliveryPoints = () => {
       } else {
         const payload = {
           name: values.name,
+          vendorName: values.vendorName,
           address: values.address,
           latitude: values.latitude,
           longitude: values.longitude,
@@ -94,6 +101,10 @@ const DeliveryPoints = () => {
     {
       title: "Center Name",
       dataIndex: "name",
+    },
+    {
+      title: "Vendor Name", // ✅ ADDED
+      dataIndex: "vendorName",
     },
     {
       title: "Address",
@@ -163,6 +174,19 @@ const DeliveryPoints = () => {
             rules={[{ required: true }]}
           >
             <Input placeholder="Enter center name" />
+          </Form.Item>
+          <Form.Item
+            name="vendorName"
+            label="Vendor Name"
+            rules={[{ required: true, message: "Please select vendor" }]}
+          >
+            <Select placeholder="Select vendor">
+              {vendors.map((vendor) => (
+                <Select.Option key={vendor.id} value={vendor.name}>
+                  {vendor.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
