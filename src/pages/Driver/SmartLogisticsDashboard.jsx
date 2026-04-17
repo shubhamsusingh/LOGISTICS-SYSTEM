@@ -1,6 +1,10 @@
 // SmartLogisticsDashboard.jsx
 import { useState } from "react";
-import { PoweroffOutlined } from "@ant-design/icons";
+import {
+  PoweroffOutlined,
+  UserOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -11,6 +15,7 @@ import {
   Tooltip,
   Typography,
   Popconfirm,
+  Dropdown,
 } from "antd";
 import {
   CarOutlined,
@@ -280,7 +285,21 @@ export default function SmartLogisticsDashboard() {
   })();
 
   const markStop = () => setStopsCompleted((v) => Math.min(v + 1, totalStops));
-
+  const userMenu = [
+    {
+      key: "logout",
+      label: (
+        <Popconfirm
+          title="Are you sure you want to logout?"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={handleLogout}
+        >
+          <span>Logout</span>
+        </Popconfirm>
+      ),
+    },
+  ];
   return (
     <div className={styles.root}>
       {/* ── Header ─────────────────────────────────────────────────────────── */}
@@ -292,24 +311,11 @@ export default function SmartLogisticsDashboard() {
         <div className={styles.headerRight}>
           <WifiOutlined style={{ color: "#5dade2" }} />
           <span>Welcome, {ROUTE_INFO.driver}</span>
-
-          <Popconfirm
-            title="Are you sure you want to logout?"
-            okText="Yes"
-            cancelText="No"
-            onConfirm={handleLogout}
-          >
-            <PoweroffOutlined
-              style={{
-                marginLeft: "12px",
-                fontSize: "18px",
-                color: "#ff7875",
-                cursor: "pointer",
-              }}
-            />
-          </Popconfirm>
-
-          <div className={styles.avatar}>RJ</div>
+          <Dropdown menu={{ items: userMenu }} placement="bottomRight">
+            <div className={styles.avatar} style={{ cursor: "pointer" }}>
+              RJ
+            </div>
+          </Dropdown>
         </div>
       </header>
 
