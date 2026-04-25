@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form, Input, Select } from "antd";
 import MapView from "../components/MapView";
+import {
+  addDeliveryLocationApi,
+  getDeliveryLocationListApi,
+} from "@/services/deliveryLocationList.js";
 
 const DeliveryPoints = () => {
   // ✅ renamed
@@ -14,25 +18,14 @@ const DeliveryPoints = () => {
   const lat = parseFloat(latRaw);
   const lng = parseFloat(lngRaw);
   const [locationLabel, setLocationLabel] = useState("");
-  const [vendors, setVendors] = useState([
-    { id: 1, name: "ABC Supplier" },
-    { id: 2, name: "XYZ Logistics" },
-    { id: 3, name: "Fresh Foods Ltd" },
-  ]);
+  const [vendors, setVendors] = useState([{ id: 1, name: "Nand Pvt" }]);
   const fetchLocations = async () => {
     try {
-      setLocations([
-        {
-          id: 1,
-          name: "Anganwadi Center A",
-          vendorName: "ABC Supplier",
-          address: "123 Main Street",
-          latitude: "18.5204",
-          longitude: "73.8567",
-        },
-      ]);
-    } catch (err) {
-      console.error(err);
+      const res = await getDeliveryLocationListApi();
+      console.log(res.data.data);
+      setLocations(res.data.data);
+    } catch (error) {
+      console.log("Error fetching delivery locations:", error);
     }
   };
 
@@ -76,13 +69,14 @@ const DeliveryPoints = () => {
       } else {
         const payload = {
           name: values.name,
-          vendorName: values.vendorName,
+          vendor_id: values.vendorName,
           address: values.address,
           latitude: values.latitude,
           longitude: values.longitude,
         };
 
         console.log(payload);
+        await addDeliveryLocationApi(payload);
         fetchLocations();
       }
 
@@ -100,12 +94,12 @@ const DeliveryPoints = () => {
   const columns = [
     {
       title: "Center Name",
-      dataIndex: "name",
+      dataIndex: "center_name",
     },
-    {
-      title: "Vendor Name", // ✅ ADDED
-      dataIndex: "vendorName",
-    },
+    // {
+    //   title: "Vendor Name", // ✅ ADDED
+    //   dataIndex: "vendorName",
+    // },
     {
       title: "Address",
       dataIndex: "address",
@@ -182,7 +176,7 @@ const DeliveryPoints = () => {
           >
             <Select placeholder="Select vendor">
               {vendors.map((vendor) => (
-                <Select.Option key={vendor.id} value={vendor.name}>
+                <Select.Option key={vendor.id} value={vendor.id}>
                   {vendor.name}
                 </Select.Option>
               ))}
