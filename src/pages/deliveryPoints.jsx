@@ -13,6 +13,7 @@ const DeliveryPoints = () => {
   const [locations, setLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+
   const [form] = Form.useForm();
 
   const latRaw = Form.useWatch("latitude", form);
@@ -141,6 +142,13 @@ const DeliveryPoints = () => {
       ),
     },
   ];
+  const vendor =
+    locations.length > 0
+      ? {
+          start_latitude: locations[0].latitude,
+          start_longitude: locations[0].longitude,
+        }
+      : null;
 
   return (
     <div style={{ padding: 24 }}>
@@ -162,8 +170,10 @@ const DeliveryPoints = () => {
       {locations.length > 0 && (
         <div style={{ marginTop: 24 }}>
           <h3 style={{ marginBottom: 12 }}>Delivery Points Map</h3>
+
           <MapView
             data={{
+              vendor: vendor,
               locationList: locations,
             }}
           />
@@ -178,14 +188,14 @@ const DeliveryPoints = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="name"
+            name="center_name"
             label="Center Name"
             rules={[{ required: true }]}
           >
             <Input placeholder="Enter center name" />
           </Form.Item>
           <Form.Item
-            name="vendorName"
+            name="vendor_id"
             label="Vendor Name"
             rules={[{ required: true, message: "Please select vendor" }]}
           >
