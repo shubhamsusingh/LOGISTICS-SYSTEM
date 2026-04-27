@@ -9,3 +9,10 @@ export const addDeliveryLocationApi = async (payload) => {
 export const getDeliveryLocationListApi = async () => {
   return axiosInstance.get("/delivary-location-list");
 };
+
+export const updateDeliveryLocationApi = async (payload) => {
+  return axiosInstance.post("/update", payload);
+};
+export const deleteDeliveryLocationApi = async (id) => {
+  return axiosInstance.delete(`/delete-locations/${id}`);
+};

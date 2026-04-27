@@ -4,6 +4,8 @@ import MapView from "../components/MapView";
 import {
   addDeliveryLocationApi,
   getDeliveryLocationListApi,
+  updateDeliveryLocationApi,
+  deleteDeliveryLocationApi,
 } from "@/services/deliveryLocationList.js";
 
 const DeliveryPoints = () => {
@@ -63,20 +65,28 @@ const DeliveryPoints = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-
+      const payload = {
+        id: editId,
+        name: values.name,
+        vendor_id: values.vendorName,
+        address: values.address,
+        latitude: values.latitude,
+        longitude: values.longitude,
+      };
       if (editId) {
+        console.log(payload);
         // update API later
+        await updateDeliveryLocationApi(payload);
       } else {
-        const payload = {
+        const addPayload = {
           name: values.name,
           vendor_id: values.vendorName,
           address: values.address,
           latitude: values.latitude,
           longitude: values.longitude,
         };
-
-        console.log(payload);
-        await addDeliveryLocationApi(payload);
+        console.log(addPayload);
+        await addDeliveryLocationApi(addPayload);
         fetchLocations();
       }
 
@@ -87,8 +97,13 @@ const DeliveryPoints = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    setLocations(locations.filter((loc) => loc.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await deleteDeliveryLocationApi(id);
+      fetchLocations(); // refresh table
+    } catch (error) {
+      console.log("Delete error:", error.response?.data || error);
+    }
   };
 
   const columns = [
