@@ -2,7 +2,7 @@
 
 import { Card, Progress } from "antd";
 import { ThunderboltOutlined } from "@ant-design/icons";
-import { ROUTE_INFO } from "../../constants";
+// import { ROUTE_INFO } from "../../constants";
 import styles from "../../pages/Driver/Dashboard.module.css";
 
 const DeliverySummary = ({ stopsCompleted, totalStops, loadDelivered, stopsPct, loadPct }) => (
@@ -31,7 +31,7 @@ const DeliverySummary = ({ stopsCompleted, totalStops, loadDelivered, stopsPct, 
       <div className={styles.progressMeta}>
         <span>Load Delivered</span>
         <span className={styles.progressValue} style={{ color: "#00897b" }}>
-          {loadDelivered} / {ROUTE_INFO.totalLoad} kg
+          {loadDelivered}  kg
         </span>
       </div>
       <Progress
