@@ -2,20 +2,28 @@
 
 import { Button } from "antd";
 import { CheckCircleOutlined, PlayCircleOutlined, PauseCircleOutlined } from "@ant-design/icons";
-import { ROUTE_INFO } from "../../constants";
 import StopList from "./StopList";
 import styles from "../../pages/Driver/Dashboard.module.css";
 
-const RouteCard = ({ routeStarted, stopsCompleted, totalStops, onToggleRoute, onMarkStop }) => (
+const RouteCard = ({
+  routeStarted,
+  stopsCompleted,
+  totalStops,
+  stops,          // ← array of stop objects from API
+  routeId,        // ← route_id from API
+  totalLoad,      // ← total_load from API
+  vehicle,        // ← vehicle object from API  { vehicle_number, capacity }
+  routeDate,      // ← route_date from API
+  onToggleRoute,
+  onMarkStop,
+}) => (
   <div className={styles.routeCard}>
-    <div className={styles.routeCardTitle}>
-      Today's Route
-    </div>
+    <div className={styles.routeCardTitle}>Today's Route</div>
 
     {[
-      ["Vehicle",     ROUTE_INFO.vehicle],
-      ["Total Stops", `${totalStops} Stops`],
-      ["Total Load",  `${ROUTE_INFO.totalLoad} kg`],
+      ["Vehicle",     vehicle?.vehicle_number ?? "—"],
+      ["Total Stops", `${totalStops ?? 0} Stops`],
+      ["Total Load",  `${totalLoad ?? 0} kg`],
     ].map(([label, value]) => (
       <div key={label} className={styles.routeRow}>
         <span className={styles.routeLabel}>{label}</span>
@@ -23,7 +31,9 @@ const RouteCard = ({ routeStarted, stopsCompleted, totalStops, onToggleRoute, on
       </div>
     ))}
 
-    <div className={styles.routeDate}>Route Date: {ROUTE_INFO.date}</div>
+    <div className={styles.routeDate}>
+      Route Date: {routeDate ?? "—"}
+    </div>
 
     <Button
       type="primary"
@@ -49,7 +59,8 @@ const RouteCard = ({ routeStarted, stopsCompleted, totalStops, onToggleRoute, on
       Mark Next Stop Done
     </Button>
 
-    <StopList stopsCompleted={stopsCompleted} />
+    {/* Pass API stops down to StopList */}
+    <StopList stops={stops} stopsCompleted={stopsCompleted} />
   </div>
 );
 
