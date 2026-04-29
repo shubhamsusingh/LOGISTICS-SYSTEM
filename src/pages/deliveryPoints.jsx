@@ -68,28 +68,28 @@ const DeliveryPoints = () => {
       const values = await form.validateFields();
       const payload = {
         id: editId,
-        name: values.name,
-        vendor_id: values.vendorName,
+        name: values.center_name,
+        vendor_id: values.vendor_id,
         address: values.address,
         latitude: values.latitude,
         longitude: values.longitude,
       };
       if (editId) {
+        console.log(values);
         console.log(payload);
-        // update API later
         await updateDeliveryLocationApi(payload);
       } else {
         const addPayload = {
-          name: values.name,
-          vendor_id: values.vendorName,
+          name: values.center_name,
+          vendor_id: values.vendor_id,
           address: values.address,
           latitude: values.latitude,
           longitude: values.longitude,
         };
         console.log(addPayload);
         await addDeliveryLocationApi(addPayload);
-        fetchLocations();
       }
+      fetchLocations();
 
       setIsModalOpen(false);
       form.resetFields();
