@@ -70,11 +70,12 @@ const FitBounds = ({ bounds }) => {
   return null;
 };
 
-const MapView = ({ stops = [] }) => {
+const MapView = ({ stops = [], totalDistance = 0 }) => {
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [mapType, setMapType] = useState("street"); // "street" or "satellite"
+  const [mapType, setMapType] = useState("street");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [estimatedDuration, setEstimatedDuration] = useState(null);
 
   useEffect(() => {
     if (stops.length === 0) return;
@@ -82,40 +83,45 @@ const MapView = ({ stops = [] }) => {
     const fetchRoute = async () => {
       setLoading(true);
       try {
-        // Build coordinates string: warehouse + all stops
         const coordinates = [
           `${WAREHOUSE.lng},${WAREHOUSE.lat}`,
           ...stops.map(stop => `${stop.longitude},${stop.latitude}`)
         ].join(';');
 
-        // OSRM API - completely free, no API key required
         const url = `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
         
         const response = await fetch(url);
         const data = await response.json();
 
         if (data.code === 'Ok' && data.routes?.[0]) {
-          // Convert GeoJSON coordinates [lng, lat] to Leaflet format [lat, lng]
-          const coords = data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+          const route = data.routes[0];
+          const coords = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
           setRouteCoordinates(coords);
+          
+          // Calculate ETA based on OSRM's duration
+          const durationMin = Math.round(route.duration / 60);
+          setEstimatedDuration(durationMin);
         }
       } catch (error) {
         console.error("Error fetching route:", error);
-        // Fallback to straight lines if routing fails
         const fallbackCoords = [
           [WAREHOUSE.lat, WAREHOUSE.lng],
           ...stops.map(s => [parseFloat(s.latitude), parseFloat(s.longitude)])
         ];
         setRouteCoordinates(fallbackCoords);
+        
+        // Fallback ETA calculation (assuming average speed of 40 km/h)
+        if (totalDistance > 0) {
+          setEstimatedDuration(Math.round((totalDistance / 40) * 60));
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchRoute();
-  }, [stops]);
+  }, [stops, totalDistance]);
 
-  // Toggle fullscreen
   const toggleFullscreen = () => {
     const container = document.getElementById("map-container");
     
@@ -144,7 +150,6 @@ const MapView = ({ stops = [] }) => {
     }
   };
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -163,13 +168,11 @@ const MapView = ({ stops = [] }) => {
     };
   }, []);
 
-  // Calculate bounds for all points
   const allPoints = [
     [WAREHOUSE.lat, WAREHOUSE.lng],
     ...stops.map(s => [parseFloat(s.latitude), parseFloat(s.longitude)])
   ];
 
-  // Tile layer URLs
   const tileUrls = {
     street: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     satellite: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -177,7 +180,7 @@ const MapView = ({ stops = [] }) => {
 
   const attributions = {
     street: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    satellite: '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    satellite: '&copy; <a href="https://www.esri.com/">Esri</a>',
   };
 
   return (
@@ -196,16 +199,13 @@ const MapView = ({ stops = [] }) => {
         style={{ height: "100%", width: "100%", borderRadius: isFullscreen ? "0" : "8px" }}
         scrollWheelZoom={false}
       >
-        {/* Dynamic tile layer based on map type */}
         <TileLayer
           attribution={attributions[mapType]}
           url={tileUrls[mapType]}
         />
 
-        {/* Fit bounds to show all markers */}
         <FitBounds bounds={allPoints} />
 
-        {/* Road-based route line */}
         {routeCoordinates.length > 0 && (
           <Polyline
             positions={routeCoordinates}
@@ -215,11 +215,7 @@ const MapView = ({ stops = [] }) => {
           />
         )}
 
-        {/* Warehouse marker */}
-        <Marker
-          position={[WAREHOUSE.lat, WAREHOUSE.lng]}
-          icon={warehouseIcon}
-        >
+        <Marker position={[WAREHOUSE.lat, WAREHOUSE.lng]} icon={warehouseIcon}>
           <Popup>
             <div style={{ fontSize: 13, fontWeight: 600 }}>
               🏭 Warehouse
@@ -230,7 +226,6 @@ const MapView = ({ stops = [] }) => {
           </Popup>
         </Marker>
 
-        {/* Stop markers */}
         {stops.map((stop) => (
           <Marker
             key={stop.stop_id}
@@ -249,6 +244,57 @@ const MapView = ({ stops = [] }) => {
         ))}
       </MapContainer>
 
+      {/* Route Info Panel - Using API Data */}
+      {totalDistance > 0 && (
+        <div style={{
+          position: "absolute",
+          bottom: 10,
+          left: 10,
+          background: "rgba(255,255,255,0.95)",
+          padding: "12px 16px",
+          borderRadius: 8,
+          boxShadow: "0 2px 12px rgba(0,0,0,0.2)",
+          zIndex: 1000,
+          minWidth: 220,
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "#666", marginBottom: 8 }}>
+            ROUTE INFORMATION
+          </div>
+          <div style={{ display: "flex", gap: 16, marginBottom: 8 }}>
+            <div>
+              <div style={{ fontSize: 10, color: "#999" }}>Total Distance</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "#1565c0" }}>
+                {totalDistance} km
+              </div>
+            </div>
+            {estimatedDuration && (
+              <div>
+                <div style={{ fontSize: 10, color: "#999" }}>Est. Time</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "#1565c0" }}>
+                  {estimatedDuration} min
+                </div>
+              </div>
+            )}
+            <div>
+              <div style={{ fontSize: 10, color: "#999" }}>Stops</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "#1565c0" }}>
+                {stops.length}
+              </div>
+            </div>
+          </div>
+          <div style={{
+            fontSize: 9,
+            color: "#999",
+            marginTop: 8,
+            paddingTop: 8,
+            borderTop: "1px solid #eee",
+            fontStyle: "italic"
+          }}>
+            * Distance from route planning system
+          </div>
+        </div>
+      )}
+
       {/* Control buttons */}
       <div style={{
         position: "absolute",
@@ -259,7 +305,6 @@ const MapView = ({ stops = [] }) => {
         flexDirection: "column",
         gap: 8,
       }}>
-        {/* Map Type Toggle */}
         <div style={{
           background: "white",
           borderRadius: 6,
@@ -299,7 +344,6 @@ const MapView = ({ stops = [] }) => {
           </button>
         </div>
 
-        {/* Fullscreen Toggle */}
         <button
           onClick={toggleFullscreen}
           style={{
@@ -320,7 +364,6 @@ const MapView = ({ stops = [] }) => {
         </button>
       </div>
 
-      {/* Loading indicator */}
       {loading && (
         <div style={{
           position: "absolute",
