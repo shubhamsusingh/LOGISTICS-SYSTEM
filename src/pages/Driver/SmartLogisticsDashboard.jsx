@@ -11,6 +11,9 @@ import DeliverySummary from "../../components/Driver/DeliverySummary";
 import NotificationsCard from "../../components/Driver/NotificationsCard";
 import EmergencyCard from "../../components/Driver/EmergencyCard";
 import { driverDashboard } from "../../services/driver";
+import WeatherWidget from "../../components/Driver/WeatherWidget";
+import PerformanceMetrics from "../../components/Driver/PerformanceMetrics";
+import QuickActions from "../../components/Driver/QuickActions";
 
 import styles from "./Dashboard.module.css";
 
@@ -145,9 +148,10 @@ const SmartLogisticsDashboard = () => {
             onMarkStop={handleMarkStop}
           />
           <MapCard
-            stops={stops}                     // pass stops for map pins
-            routeId={route.route_id}
-          />
+  stops={stops}
+  routeId={route.route_id}
+  totalDistance={route.total_distance}  // ← Add this line
+/>
         </div>
 
         {/* Action Bar */}
@@ -161,19 +165,28 @@ const SmartLogisticsDashboard = () => {
 
         {/* Bottom Grid — Summary + Notifications + Emergency */}
         <div className={styles.bottomGrid}>
-          <DeliverySummary
-            stopsCompleted={stopsCompleted}
-            totalStops={totalStops}
-            loadDelivered={loadDelivered}
-            stopsPct={stopsPct}
-            loadPct={loadPct}
-            totalLoad={totalLoad}
-            pendingStops={pendingStops}
-          />
+  <DeliverySummary
+    stopsCompleted={stopsCompleted}
+    totalStops={totalStops}
+    loadDelivered={loadDelivered}
+    stopsPct={stopsPct}
+    loadPct={loadPct}
+    totalLoad={totalLoad}
+    pendingStops={pendingStops}
+  />
           <NotificationsCard />
-          <EmergencyCard />
+  <EmergencyCard />
         </div>
-
+<div style={{
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+  gap: 16,
+  marginTop: 16
+}}>
+  <WeatherWidget />
+  <PerformanceMetrics />
+  <QuickActions />
+</div>
       </main>
     </div>
   );

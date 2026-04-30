@@ -3,14 +3,14 @@ import { EnvironmentOutlined } from "@ant-design/icons";
 import MapView from "./MapView";
 import styles from "../../pages/Driver/Dashboard.module.css";
 
-const MapCard = ({ stops = [] }) => (
+const MapCard = ({ stops = [], totalDistance = 0 }) => (
   <Card className={styles.mapCard} bodyStyle={{ padding: "20px" }}>
     <div className={styles.mapCardTitle}>
       <EnvironmentOutlined style={{ color: "#1565c0" }} />
       Optimized Route Map
     </div>
 
-    <MapView stops={stops} />
+    <MapView stops={stops} totalDistance={totalDistance} />
 
     <div className={styles.routeLegend}>
       {/* Warehouse always first in legend */}
