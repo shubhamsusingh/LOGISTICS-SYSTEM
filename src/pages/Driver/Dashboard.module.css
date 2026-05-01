@@ -64,10 +64,9 @@
 
 /* ── Body ─────────────────────────────────────────────────────────────── */
 .body {
-  padding: 24px 28px;
-  max-width: 1320px;
+  padding: 25px 21px;   /* reduce side padding */
+  max-width: 1600px;    /* increase width */
   margin: 0 auto;
-  animation: fadeUp 0.45s ease both;
 }
 
 @keyframes fadeUp {
