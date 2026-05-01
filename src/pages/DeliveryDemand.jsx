@@ -9,9 +9,10 @@ import {
   DatePicker,
   Card,
 } from "antd";
+import { message } from "antd";
 import DemandPieChart from "../components/DemandPieChart";
 import DemandBarChart from "../components/DemandBarChart";
-import {getDemand} from "../services/demand";
+import {getDemand,addDemand} from "../services/demand";
 const { Option } = Select;
 
 const DeliveryDemand = () => {
@@ -19,6 +20,7 @@ const DeliveryDemand = () => {
   const [locations, setLocations] = useState([]); // delivery points
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
   // Dummy data (replace with API later)
@@ -72,33 +74,36 @@ const DeliveryDemand = () => {
 
   // Save
   const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
+  try {
+    const values = await form.validateFields();
 
-      if (editId) {
-        // update API later
-      } else {
-        const selectedLocation = locations.find(
-          (l) => l.id === values.location_id,
-        );
+    setLoading(true); // 🔥 start loader
 
-        const payload = {
-          id: Date.now(),
-          location_id: values.location_id,
-          location_name: selectedLocation?.name,
-          demand: values.demand,
-          date: values.date.format("YYYY-MM-DD"),
-        };
+    if (editId) {
+      // update logic later
+    } else {
+      const payload = {
+  location_id: values.location_id,
+  demad_date: values.date.format("YYYY-MM-DD"), // ✅ MUST match backend
+  quantity: values.demand,
+};
 
-        setDemands([...demands, payload]);
-      }
+      await addDemand(payload); // 🔥 API call
+      message.success("Demand added successfully");
 
-      setIsModalOpen(false);
-      form.resetFields();
-    } catch (err) {
-      console.error(err);
+      // Refresh data from API (best practice)
+      await fetchData();
     }
-  };
+
+    setIsModalOpen(false);
+    form.resetFields();
+  } catch (err) {
+    console.error("Add Demand Error:", err);
+  message.error(err?.response?.data?.message || "Something went wrong");
+  } finally {
+    setLoading(false); // 🔥 stop loader
+  }
+};
 
   const handleDelete = (id) => {
     setDemands(demands.filter((d) => d.id !== id));
@@ -159,11 +164,12 @@ const DeliveryDemand = () => {
 
       {/* Modal */}
       <Modal
-        title={editId ? "Edit Demand" : "Add Demand"}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={() => setIsModalOpen(false)}
-      >
+  title={editId ? "Edit Demand" : "Add Demand"}
+  open={isModalOpen}
+  onOk={handleOk}
+  confirmLoading={loading}  // 🔥 loader here
+  onCancel={() => setIsModalOpen(false)}
+>
         <Form form={form} layout="vertical">
           <Form.Item
             name="location_id"

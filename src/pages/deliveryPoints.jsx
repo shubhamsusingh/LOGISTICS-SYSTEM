@@ -165,7 +165,9 @@ const DeliveryPoints = () => {
         </Button>
       </div>
 
-      <Table dataSource={locations} columns={columns} rowKey="id" />
+      <Table dataSource={locations} columns={columns} rowKey="id" pagination={{
+    pageSize: 6, // 👉 show only 5 records
+  }}/>
       {/* Map showing all delivery points */}
       {locations.length > 0 && (
         <div style={{ marginTop: 24 }}>

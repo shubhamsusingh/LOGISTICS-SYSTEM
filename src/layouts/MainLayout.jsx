@@ -13,7 +13,7 @@ const menuItems = [
   { key: "/delivery", label: "Delivery Points" },
   { key: "/demand", label: "Delivery Demand" },
   { key: "/route", label: "Route Optimization" },
-  { key: "/reports", label: "Reports" },
+  
 ];
 
 export default function MainLayout() {
