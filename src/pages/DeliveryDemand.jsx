@@ -10,6 +10,7 @@ import {
   Card,
 } from "antd";
 import DemandPieChart from "../components/DemandPieChart";
+import DemandBarChart from "../components/DemandBarChart";
 import {getDemand} from "../services/demand";
 const { Option } = Select;
 
@@ -147,7 +148,14 @@ const DeliveryDemand = () => {
         </Button>
       </div>
 
-      <Table dataSource={demands} columns={columns} rowKey="id" />
+      <Table
+  dataSource={demands}
+  columns={columns}
+  rowKey="id"
+  pagination={{
+    pageSize: 6, // 👉 show only 5 records
+  }}
+/>
 
       {/* Modal */}
       <Modal
@@ -184,9 +192,19 @@ const DeliveryDemand = () => {
           </Form.Item>
         </Form>
       </Modal>
-      <Card title="Demand Summary" style={{ marginTop: 24 }}>
-        <DemandPieChart demands={demands} />
-      </Card>
+      <div style={{ display: "flex", gap: 20, marginTop: 24 }}>
+  
+  {/* Left - Pie Chart */}
+  <Card title="Demand Summary" style={{ flex: 1 }}>
+    <DemandPieChart demands={demands} />
+  </Card>
+
+  {/* Right - Bar Chart */}
+  <Card title="Top 7 Locations Demand" style={{ flex: 1 }}>
+    <DemandBarChart demands={demands} />
+  </Card>
+
+</div>
     </div>
   );
 };
