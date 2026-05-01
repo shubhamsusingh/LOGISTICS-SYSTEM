@@ -4,6 +4,8 @@ import MapView from "../components/MapView";
 import {
   addDeliveryLocationApi,
   getDeliveryLocationListApi,
+  updateDeliveryLocationApi,
+  deleteDeliveryLocationApi,
 } from "@/services/deliveryLocationList.js";
 
 const DeliveryPoints = () => {
@@ -11,6 +13,7 @@ const DeliveryPoints = () => {
   const [locations, setLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editId, setEditId] = useState(null);
+
   const [form] = Form.useForm();
 
   const latRaw = Form.useWatch("latitude", form);
@@ -63,22 +66,30 @@ const DeliveryPoints = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-
+      const payload = {
+        id: editId,
+        name: values.center_name,
+        vendor_id: values.vendor_id,
+        address: values.address,
+        latitude: values.latitude,
+        longitude: values.longitude,
+      };
       if (editId) {
-        // update API later
+        console.log(values);
+        console.log(payload);
+        await updateDeliveryLocationApi(payload);
       } else {
-        const payload = {
-          name: values.name,
-          vendor_id: values.vendorName,
+        const addPayload = {
+          name: values.center_name,
+          vendor_id: values.vendor_id,
           address: values.address,
           latitude: values.latitude,
           longitude: values.longitude,
         };
-
-        console.log(payload);
-        await addDeliveryLocationApi(payload);
-        fetchLocations();
+        console.log(addPayload);
+        await addDeliveryLocationApi(addPayload);
       }
+      fetchLocations();
 
       setIsModalOpen(false);
       form.resetFields();
@@ -87,8 +98,13 @@ const DeliveryPoints = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    setLocations(locations.filter((loc) => loc.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      await deleteDeliveryLocationApi(id);
+      fetchLocations(); // refresh table
+    } catch (error) {
+      console.log("Delete error:", error.response?.data || error);
+    }
   };
 
   const columns = [
@@ -126,6 +142,13 @@ const DeliveryPoints = () => {
       ),
     },
   ];
+  const vendor =
+    locations.length > 0
+      ? {
+          start_latitude: locations[0].latitude,
+          start_longitude: locations[0].longitude,
+        }
+      : null;
 
   return (
     <div style={{ padding: 24 }}>
@@ -147,8 +170,10 @@ const DeliveryPoints = () => {
       {locations.length > 0 && (
         <div style={{ marginTop: 24 }}>
           <h3 style={{ marginBottom: 12 }}>Delivery Points Map</h3>
+
           <MapView
             data={{
+              vendor: vendor,
               locationList: locations,
             }}
           />
@@ -163,14 +188,14 @@ const DeliveryPoints = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="name"
+            name="center_name"
             label="Center Name"
             rules={[{ required: true }]}
           >
             <Input placeholder="Enter center name" />
           </Form.Item>
           <Form.Item
-            name="vendorName"
+            name="vendor_id"
             label="Vendor Name"
             rules={[{ required: true, message: "Please select vendor" }]}
           >
