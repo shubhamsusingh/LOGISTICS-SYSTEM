@@ -3,7 +3,13 @@ import HCR from "highcharts-react-official";
 
 const HighchartsReact = HCR.default;
 
-const DemandPieChart = () => {
+const DemandPieChart = ({ demands }) => {
+  // 👉 Total Milk Demand (dynamic)
+  const totalMilk = demands.reduce((sum, item) => sum + item.demand, 0);
+
+  // 👉 Static Paneer
+  const paneer = 150;
+
   const options = {
     chart: {
       type: "pie",
@@ -26,8 +32,8 @@ const DemandPieChart = () => {
       {
         name: "Demand",
         data: [
-          { name: "Food Grain", y: 210 },
-          { name: "Milk", y: 240 },
+          { name: "Milk", y: totalMilk },   // ✅ dynamic
+          { name: "Paneer", y: paneer },    // ✅ static
         ],
       },
     ],

@@ -10,6 +10,8 @@ import {
   Card,
 } from "antd";
 import DemandPieChart from "../components/DemandPieChart";
+import DemandBarChart from "../components/DemandBarChart";
+import {getDemand} from "../services/demand";
 const { Option } = Select;
 
 const DeliveryDemand = () => {
@@ -21,21 +23,34 @@ const DeliveryDemand = () => {
 
   // Dummy data (replace with API later)
   const fetchData = async () => {
-    setLocations([
-      { id: 1, name: "Anganwadi Center A" },
-      { id: 2, name: "Center B" },
-    ]);
+  try {
+    const res = await getDemand();
 
-    setDemands([
-      {
-        id: 1,
-        location_id: 1,
-        location_name: "Anganwadi Center A",
-        demand: 50,
-        date: "2026-03-31",
-      },
-    ]);
-  };
+    const apiData = res.data.data;
+
+    // 👉 Format for table
+    const formatted = apiData.map((item) => ({
+      id: item.id,
+      location_id: item.location_id,
+      location_name: item.location.center_name,
+      demand: item.quantity,
+      date: item.demad_date,
+    }));
+
+    setDemands(formatted);
+
+    // 👉 Extract locations (for dropdown)
+    const uniqueLocations = apiData.map((item) => ({
+      id: item.location.id,
+      name: item.location.center_name,
+    }));
+
+    setLocations(uniqueLocations);
+
+  } catch (err) {
+    console.error("API Error:", err);
+  }
+};
 
   useEffect(() => {
     fetchData();
@@ -133,7 +148,14 @@ const DeliveryDemand = () => {
         </Button>
       </div>
 
-      <Table dataSource={demands} columns={columns} rowKey="id" />
+      <Table
+  dataSource={demands}
+  columns={columns}
+  rowKey="id"
+  pagination={{
+    pageSize: 6, // 👉 show only 5 records
+  }}
+/>
 
       {/* Modal */}
       <Modal
@@ -170,9 +192,19 @@ const DeliveryDemand = () => {
           </Form.Item>
         </Form>
       </Modal>
-      <Card title="Demand Summary" style={{ marginTop: 24 }}>
-        <DemandPieChart />
-      </Card>
+      <div style={{ display: "flex", gap: 20, marginTop: 24 }}>
+  
+  {/* Left - Pie Chart */}
+  <Card title="Demand Summary" style={{ flex: 1 }}>
+    <DemandPieChart demands={demands} />
+  </Card>
+
+  {/* Right - Bar Chart */}
+  <Card title="Top 7 Locations Demand" style={{ flex: 1 }}>
+    <DemandBarChart demands={demands} />
+  </Card>
+
+</div>
     </div>
   );
 };
