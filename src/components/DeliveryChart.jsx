@@ -5,11 +5,11 @@ const DeliveryChart = () => {
   const options = {
     chart: { type: "column" },
     title: { text: "Delivery Performance" },
-    xAxis: { categories: ["Completed", "Delayed", "Pending"] },
+    xAxis: { categories: ["Completed", "Pending"] },
     series: [
       {
         name: "Deliveries",
-        data: [10, 5, 3],
+        data: [65,10],
       },
     ],
   };
